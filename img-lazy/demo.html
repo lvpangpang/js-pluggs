@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>图片懒加载demo</title>
+	<style type="text/css">
+	*{
+		padding: 0;
+		margin: 0;
+	}
+    .prompt-explain {
+        margin-bottom: 50px;
+        border: 2px dotted blue;
+        line-height: 1.5;
+        box-sizing:border-box;
+    }
+    div {
+        min-height: 200px;
+    }
+    .top {
+    	height: 200px;
+    }
+    </style>
+</head>
+<body>
+<div class="prompt-explain">
+    <dl>
+        <dt>图片懒加载组件说明:</dt>
+        <dd>
+            <p>作用：该组件用于一个页面存在比较多的图片的时候，加快页面打开速度</p>
+            <p>依赖:无依赖</p>
+            <p>参数：var lazy = new lazyImg({
+						realSrcAtr : 'data-src',
+						extendHeight: 200
+					});
+				1.realSrcAtr （可选）: 图片的真实地址所在的自定义属性，默认为data-src; 2.extendHeight(可选) ： 用于定于当图片在距离浏览器下边多少距离显示出来，默认为0.
+            </p>
+            <p>兼容：IE6+</p>
+        </dd>
+    </dl>
+</div>
+	<div class="top"></div>
+	<div>
+		<img data-src='images/1.jpg'/>
+	</div>
+	<div>
+		<img data-src='images/2.jpg'/>
+	</div>
+	<div>
+		<img data-src='images/3.jpg'/>
+	</div>
+	<div>
+		<img data-src='images/4.jpg'/>
+	</div>
+	<script type="text/javascript" src='img-lazy.es6.js'></script>
+	<script type="text/javascript">
+	// 调用
+	new lazyImg({
+		realSrcAtr : 'data-src',
+		extendHeight: 0
+	});
+	</script>
+</body>
+</html>

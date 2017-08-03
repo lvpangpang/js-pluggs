@@ -1,0 +1,79 @@
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td{margin:0;padding:0;}html{font-size: 12px;}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;}table{border-collapse:collapse;border-spacing:0;}q:before,q:after{content:'';}object,embed{vertical-align:top;}hr,legend{display:none;}img,abbr,acronym,fieldset{border:0;}ul li{list-style-type:none;}a,label{cursor:pointer;}img{vertical-align:bottom;margin:0;padding:0;}a{text-decoration:none;outline: none;}.clearfix:after{content: "."; visibility: hidden; display: block; height: 0.1px; font-size:0.1em; line-height: 0; clear: both;}.clearfix {*zoom:1;}input ,textarea,select{outline: none;border:1px solid #bfbfbf;}th{font-weight: 400;}button{cursor: pointer;border:none;outline: none;}textarea{border: 1px solid #ccc;resize: none;outline: none;overflow: hidden;padding: 5px;}select{outline: none;}.text_overflow{overflow:hidden;white-space: nowrap;
+    text-overflow: ellipsis;}
+html {
+    font-family: "Microsoft YaHei",tahoma,arial,"Hiragino Sans GB","\5b8b\4f53",sans-serif;
+    font-size:14px;
+    color: #5c5d5e;
+}
+/* 公共分页模块 */
+.index-page {
+    float:right;
+    padding-top:10px;
+}
+.index-page .index-target {
+    width:25px;
+    height:14px;
+    line-height: 14px;
+    padding:3px 5px;
+    border-radius:2px;
+    vertical-align: middle;
+}
+.index-page .target {
+    margin-right:30px;
+    color:#808080;
+}
+.index-page .page-main {
+    float:right;
+    margin-top:-10px;
+}
+.index-page .page-main li {
+    display: none;
+    float:left;
+    width:37px;
+    height:37px;
+    border:1px solid #e6e6e6;
+    text-align:center;
+    line-height:37px;
+    margin-right: 5px;
+}
+.index-page .page-main .block {
+    display: block;
+}
+.index-page .page-main a {
+    display:block;
+    height:100%;
+    color:#c0c0c0;
+}
+.index-page .page-main a:hover ,
+.index-page .page-main .active {
+    background-color:#f75000;
+    color:#fff;
+}
+.index-page .page-main .unable-page {
+    cursor: not-allowed;
+    background-color: #dedede;
+}
+.index-page .page-main .unable-page:hover {
+    background-color: #dedede;
+}
+.index-page .page-main .prev ,
+.index-page .page-main .next {
+    display: block;
+    height: 9px;
+    padding: 13px 14px 15px 15px;
+}
+.index-page .page-main .prev-i ,
+.index-page .page-main .next-i {
+    display:block;
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-right: 8px solid #c0c0c0;
+    border-bottom: 6px solid transparent;
+}
+.index-page .page-main .next-i {
+    border-top: 6px solid transparent;
+    border-right: none;
+    border-left: 8px solid #c0c0c0;
+    border-bottom: 6px solid transparent;
+}

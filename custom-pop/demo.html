@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>自定义弹出框组件</title>
+	<link rel="stylesheet" type="text/css" href="custom-pop.css" />
+	<style type="text/css">
+	.prompt-explain {
+        margin-bottom: 50px;
+        padding:10px;
+		border: 2px dotted blue;
+		line-height: 1.5;
+	}
+	</style>
+</head>
+<body>
+	<div class="prompt-explain">
+		<dl>
+			<dt>弹出框组件说明:</dt>
+			<dd>
+				<p>作用：该组件用于一个项目的自定义弹出框，对系统自带的弹出框的优化</p>
+				<p>依赖:依赖custom-pop.css</p>
+				<div>
+					<p>参数：var customPop = new CustomPop({
+					title: '妮素提示',
+					type : 'prompt',
+					msg : '这是一个提示框！',
+					callback : function(){}
+					});</p>
+					<p>1.title:弹出框的title(可选)</p>
+					<p>2.type:a.'prompt'：一般提示； b.'success' : 成功； c.'failed':失败（可选，默认为一般提示）</p>
+					<p>3.msg:提示的主要内容（必须）</p>
+					<p>4.callback: 回调函数，当点击确定按钮时候的执行的函数（可选）</p>
+				</div>
+				<p>兼容：IE8+</p>
+			</dd>
+		</dl>
+	</div>
+	<!-- <div class="custom-wrap" id="customWrap">
+		<div class="custom-bg"></div>
+		<div class="custom-main">
+			<div class="custom-header">
+				参数
+				<h2 class="custom-header-title">这里是标题（xx提示）</h2>
+				<button class="custom-header-close"></button>
+			</div>
+			<div class="custom-content clearfix">
+				<div class="custom-status"></div>
+				<div class="custom-msg">这是一个提示框！</div>
+			</div>
+			<div class="custom-footer">
+				<a href="###" class="custom-confirm opacity">确定</a>
+				<a href="###" class="custom-cancel opacity">取消</a>
+			</div>
+		</div>
+	</div> -->
+	<a href="###" id="test1">提示框</a>
+	<a href="###" id="test2">成功框</a>
+	<a href="###" id="test3">有回调函数的提示框</a>
+	<script src='custom-pop.js'></script>
+	<script type="text/javascript">
+	var test1 = document.querySelector('#test1'),
+		test2 = document.querySelector('#test2'),
+		test3 = document.querySelector('#test3');
+	test1.onclick = function() {
+		var customPop = new CustomPop({
+			msg : '这只是一个提示框！',
+		});
+	};
+	test2.onclick = function() {
+		var customPop = new CustomPop({
+			type :'success',
+			msg : '这只是一个成功框！',
+		});
+	};
+	test3.onclick = function() {
+		var customPop = new CustomPop({
+			msg : '这只是一个有回调的提示框！',
+			callback : function() {
+				alert('这是回调函数！');
+			}
+		});
+	};
+	
+	</script>
+</body>
+</html>

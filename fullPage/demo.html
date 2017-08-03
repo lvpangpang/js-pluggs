@@ -1,0 +1,55 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>fullPage</title>
+	<link rel="stylesheet" type="text/css" href="full-page.css" />
+	<style type="text/css">
+	</style>
+</head>
+<body>
+	<div class="full-item">
+		<img data-src="images/1.jpg" />
+	</div>
+	<div class="full-item">
+		<img data-src="images/2.jpg" />
+	</div>
+	<div class="full-item">
+		<img data-src="images/3.jpg" />
+	</div>
+	<div class="full-item">
+		<img data-src="images/4.jpg" />
+	</div>
+	<ul class="full-sidebar" id="fullSidebar">
+		<li>
+			<a href="#aaa" class="sidebar-normal">1F</a>
+			<a href="#aaa" class="sidebar-hover">美妆护肤</a>
+		</li>
+		<li>
+			<a href="###" class="sidebar-normal">2F</a>
+			<a href="###" class="sidebar-hover">个人护理</a>
+		</li>
+		<li>
+			<a href="###" class="sidebar-normal">3F</a>
+			<a href="###" class="sidebar-hover">食品保健</a>
+		</li>
+		<li>
+			<a href="###" class="sidebar-normal">4F</a>
+			<a href="###" class="sidebar-hover">其他商品</a>
+		</li>
+	</ul>
+<script type="text/javascript" src="http://s.thsi.cn/js/jquery-1.7.2.min.js"></script>
+<script src="img-lazy.js"></script>
+<script src="full-page.js"></script>
+<script type="text/javascript">
+// 图片懒加载
+var lazy = new lazyImg({
+	realSrcAtr : 'data-src',
+	extendHeight: 0
+});
+// fullPage调用
+$('.full-item').fullPage();
+</script>
+</body>
+</html>

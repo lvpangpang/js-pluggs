@@ -1,0 +1,78 @@
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td{margin:0;padding:0;}html{font-size: 12px;}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;}table{border-collapse:collapse;border-spacing:0;}q:before,q:after{content:'';}object,embed{vertical-align:top;}hr,legend{display:none;}img,abbr,acronym,fieldset{border:0;}ul li{list-style-type:none;}a,label{cursor:pointer;}img{vertical-align:bottom;margin:0;padding:0;}a{text-decoration:none;outline: none;}.clearfix:after{content: "."; visibility: hidden; display: block; height: 0.1px; font-size:0.1em; line-height: 0; clear: both;}.clearfix {*zoom:1;}input ,textarea,select{outline: none;border:1px solid #bfbfbf;}th{font-weight: 400;}
+button{cursor: pointer;border:none;outline: none;}textarea{border: 1px solid #ccc;resize: none;outline: none;overflow: hidden;padding: 5px;}select{outline: none;}.text_overflow{overflow:hidden;white-space: nowrap;
+text-overflow: ellipsis;}
+html {
+    font-family: "Microsoft YaHei",tahoma,arial,"Hiragino Sans GB","\5b8b\4f53",sans-serif;
+    font-size:14px;
+    color: #5c5d5e;
+    background-color:#eaf5fb;
+    -webkit-font-smoothing: antialiased; /*chrome、safari*/
+    -moz-osx-font-smoothing: grayscale;/*firefox*/
+}
+.full-item img {
+	display: block;
+	width: 100%;
+	min-width: 1000px;
+	height: 100%;
+}
+.full-sidebar {
+	position: fixed;
+    z-index: 9999;
+    top: 50%;
+    right: 20px;
+    margin-top:-78px;
+    width: 90px;
+    height: 155px;
+    text-align: center;
+}
+.full-sidebar li {
+	position: relative;
+    margin-bottom: 3px;
+    width: 90px;
+    height: 28px;
+    overflow: hidden;
+}
+.full-sidebar a {
+	display: block;
+	height: 100%;
+	position: relative;
+	color: #fff;
+	font-size: 16px;
+	text-align: center;
+	cursor: pointer;
+}
+.full-sidebar .sidebar-normal {
+	position: absolute;
+	right: 0;
+	z-index: 0;
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    border-radius: 50%;
+    color: #999;
+    background-color: #e6e6e6;
+}
+.full-sidebar .sidebar-hover {
+	position: absolute;
+	z-index: 100;
+    left: 90px;
+    width: 90px;
+    height: 100%;
+    line-height: 28px;
+    border-radius: 15px;
+    -webkit-transition: left .3s ease-in;
+    -moz-transition: left .3s ease-in;
+    -ms-transition: left .3s ease-in;
+    -o-transition: left .3s ease-in;
+    transition: left .3s ease-in;
+}
+.full-sidebar .active {
+	background: #ff7500;
+	color: #fff;
+}
+.full-sidebar li:hover .sidebar-normal {
+	display: none;
+}
+.full-sidebar li:hover .sidebar-hover {
+	left: 0;
+}

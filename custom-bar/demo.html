@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>模拟滚动条</title>
+	<link rel="stylesheet" type="text/css" href="custom-bar.css" />
+	<style type="text/css">
+		.prompt-explain {
+	        margin-bottom: 50px;
+			border: 2px dotted blue;
+			line-height: 1.5;
+			padding: 10px;
+		}
+		body {
+			padding: 50px;
+		}
+		.bar-wrap .test li {
+			width: 800px;
+			height: 200px;
+		}
+		.bar-wrap .test1 li {
+			width: 800px;
+			height: 20px;
+		}
+		.bar-wrap .test2 li {
+			width: 200px;
+			height: 200px;
+		}
+		.bar-wrap .test li:nth-child(odd) {
+			background-color: blue;
+		}
+		.bar-wrap .test1 li:nth-child(odd) {
+			background-color:pink;
+		}
+		.bar-wrap .test2 li:nth-child(odd) {
+			background-color:red;
+		}
+		.bar-wrap1 {
+			margin: 50px;
+			width:300px;
+			height:300px;
+			background:#000;
+			overflow:hidden;
+			position:relative;
+		}
+		.bar-wrap1 .test li:nth-child(odd) {
+			background-color: orange;
+		}
+		.bar-wrap .scroll-box1 {
+			position:relative;
+			float:right; 
+			width:10px; 
+			height:100%; 
+			background: yellow; 
+		}
+		.bar-wrap .scroll-bar1 {
+			position:absolute; 
+			left:0; 
+			top:0; 
+			width:100%;
+			height:30px; 
+			border-radius: 6px;
+			background: linear-gradient(pink, red);
+			cursor: default;
+		}  
+		.bar-wrap .scroll-box2 { 
+			position:relative;
+			position: absolute;
+			bottom: 0; 
+			width:100% ;
+			height:8px; 
+			background: yellow; 
+		}
+		.bar-wrap .scroll-bar2 {
+			position:absolute; 
+			left:0; 
+			top:0; 
+			width:100%;
+			height:100%; 
+			border-radius: 6px;
+			background: linear-gradient(to right,#000, #fff);
+			cursor: default;
+		}  
+
+		.bar-wrap .scroll-box3 {  
+			position:relative;
+			float:right; 
+			width:20px; 
+			height:100%; 
+			background: #878; 
+		}
+		.bar-wrap .scroll-bar3 {
+			position:absolute; 
+			left:0; 
+			top:0; 
+			width:100%;
+			height:30px; 
+			border-radius: 6px;
+			background: linear-gradient(pink, red);
+			cursor: default;
+		}  
+	</style>
+</head>
+<body>
+	<div class="prompt-explain">
+		<dl>
+			<dt>自定义滚动条组件说明:</dt>
+			<dd>
+				<p>作用：该组件用于模拟系统滚动条</p>
+				<p>依赖:依赖custom-bar.css</p>
+				<div>
+					<p>参数：var cus = new CustomBar(custom, {
+			scrollBarTypeX : 'scroll-bar2',
+			scrollBoxTypeX : 'scroll-box2',
+			scrollBarTypeY : 'scroll-bar1',
+			scrollBoxTypeY : 'scroll-box1',
+		});</p>
+					<p>1.obj:整个组件要绑定的dom节点（必须）</p>
+					<p>2.scrollBarTypeX:横向滚动条的样式（可选，写法要参考custom-bar.css里面的默认写法）</p>
+					<p>3.scrollBoxTypeX:横向滚动条底部的样式（可选，写法要参考custom-bar.css里面的默认写法）</p>
+					<p>4.scrollBarTypeY:轴向滚动条的样式（可选，写法要参考custom-bar.css里面的默认写法）</p>
+					<p>5.scrollBoxTypeY:纵向滚动条底部的样式（可选，写法要参考custom-bar.css里面的默认写法）</p>
+				</div>
+				<p>兼容：IE8+</p>
+			</dd>
+		</dl>
+	</div>
+	<div class="bar-wrap">
+		<div class="content-subject">
+			<!-- 这里写内容开始-->
+			<ul class="test">
+				<li>5675787667858765786576578657865</li>
+				<li>5765567576576576567567567587657685678576857685765</li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+			</ul>
+			<!-- 这里写内容结束-->
+		</div>
+		<div class="scroll-box-x">
+			<div class="scroll-bar-x"></div>
+		</div>
+		<div class="scroll-box-y">
+			<div class="scroll-bar-y"></div>
+		</div>
+	</div>
+
+	<div class="bar-wrap bar-wrap1">
+		<div class="content-subject">
+			这里写内容756675765765
+			<ul class="test1">
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+			</ul>
+		</div>
+		<div class="scroll-box-x">
+			<div class="scroll-bar-x"></div>
+		</div>
+		<div class="scroll-box-y">
+			<div class="scroll-bar-y"></div>
+		</div>
+	</div>
+
+	<div class="bar-wrap bar-wrap2">
+		<div class="content-subject">
+			这里写内容756675765765
+			<ul class="test2">
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+			</ul>
+		</div>
+		<div class="scroll-box-x">
+			<div class="scroll-bar-x"></div>
+		</div>
+		<div class="scroll-box-y">
+			<div class="scroll-bar-y"></div>
+		</div>
+	</div>
+	<script src='custom-bar.es6.js'></script>
+	<script>
+		var custom = document.querySelector('.bar-wrap');
+		new CustomBar(custom);
+
+		var custom = document.querySelector('.bar-wrap1');
+		new CustomBar(custom, {
+			scrollBarTypeX : 'scroll-bar2',
+			scrollBoxTypeX : 'scroll-box2',
+			scrollBarTypeY : 'scroll-bar1',
+			scrollBoxTypeY : 'scroll-box1',
+		});
+
+		var custom = document.querySelector('.bar-wrap2');
+		new CustomBar(custom, {
+			scrollBarTypeY : 'scroll-bar3',
+			scrollBoxTypeY : 'scroll-box3',
+		});
+	</script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport">
+<meta content="yes" name="apple-mobile-web-app-capable">
+<meta content="black" name="apple-mobile-web-app-status-bar-style">
+<meta content="telephone=no" name="format-detection">
+<meta content="email=no" name="format-detection">
+<title>移动端无缝轮播</title>
+<link rel="stylesheet" href="style.css">
+<style type="text/css">
+*{margin:0;padding: 0;}
+html{font-family: Helvetical;color: rgb(102, 102, 102);overflow-y:hidden ;min-width: 320px;max-width: 640px;margin: 0 auto;}
+a{text-decoration: none;color: rgb(102, 102, 102);}
+input{border:none;outline: none;}
+input::-webkit-input-placeholder{color:#fff;}
+input:focus::-webkit-input-placeholder{color:#EEEEEE;}
+a,button,input,textarea{-webkit-tap-highlight-color: rgba(0,0,0,0;)}
+.index-ad-box{position: relative;left: 0;top: 0;width: 100%;height: 10rem;margin-top: 3rem;overflow: hidden;}
+.index-ad-slide{width: 9999px;height: 100%;}
+.index-ad-slide a{float: left;width: 20%;height: 100%;}
+.index-ad-slide img {width: 100%; height: 100%;}
+.index-ad-fixed{position: absolute;right: 2rem;bottom:.5rem;width: 6rem;height: .6rem;display: -webkit-flex;display: flex;-webkit-justify-content:space-around;}
+.index-ad-fixed a{float: left;width: .6rem;height: .6rem;border-radius: 60%;background: #fff;}
+.index-ad-fixed .index-ad-fixed-on{background: #eb4f38;}
+</style>
+</head>
+<body>
+<section class="index-ad-box">
+	<div class="index-ad-slide">
+		<a href="http://www.taobao.com" class="index-ad-0" num='4'>
+            <img src="http://imgsrc.baidu.com/forum/pic/item/c75c10385343fbf2e7a09d60b07eca8064388fe0.jpg">
+        </a>
+		<a href="http://www.baidu.com" class="index-ad-1" num='0'>
+            <img src="http://hiphotos.baidu.com/%B4%DE%BF%F3%C8%CB/pic/item/c14a8c2cdc7ffefe8b139929.jpg">
+        </a>
+		<a href="http://www.taobao.com" class="index-ad-2" num='1'>
+            <img src="http://imgsrc.baidu.com/forum/w%3D580%3Bcp%3Dtieba%2C10%2C403%3Bap%3D%D2%A1%CC%EC%B0%C9%2C90%2C411/sign=8cadbb5443a7d933bfa8e47b9d70b263/54fbb2fb43166d22cc5494d4472309f79052d24b.jpg">
+        </a>
+		<a href="http://www.taobao.com" class="index-ad-3" num='2'>
+            <img src="http://hiphotos.baidu.com/%B4%DE%BF%F3%C8%CB/pic/item/14e6452fbab07f2a1e308901.jpg">
+        </a>
+		<a href="http://www.taobao.com" class="index-ad-4" num='3'>
+            <img src="http://imgsrc.baidu.com/forum/pic/item/aec379310a55b319065bb93643a98226cefc17d6.jpg">
+        </a>
+	</div>
+	<div class="index-ad-fixed">
+		<a href="###" class="index-ad-fixed-on"></a>
+		<a href="###"></a>
+		<a href="###"></a>
+		<a href="###"></a>
+		<a href="###"></a>
+	</div>
+</section>
+<script src="http://s.thsi.cn/js/m/js/zepto.min.js"></script>
+<script type="text/javascript">
+(function ($) {
+    $.fn.touchMove = function() {
+        var windowWidth = $(window).width(),
+            size = $(this).children().size(),
+            startX ,
+            startY,
+            XX,
+            YY,
+            startLeft,
+            moveX,
+            swipeX,
+            swipeY,
+            bj,
+            bjz,
+            translateX;
+        windowWidth = windowWidth >= 640 ? 640 : windowWidth;
+        $(this).css('width', windowWidth * (size + 1) ).children('a').css('width' ,windowWidth );
+        $(this).css('transform', 'translate3d('+-windowWidth+'px,0px,0px)');
+        $(this).live('touchstart' ,function(event) {
+            var date = new Date();
+             time1 = date.getTime();
+            startLeft = parseFloat($(this).css('transform').match(/\-?[0-9]+/g)[1]);
+            startX = event.targetTouches[0].pageX;
+            startY = event.targetTouches[0].pageY;
+            swipeX = true;
+            swipeY = true;
+        });
+        $(this).live('touchmove', function(event) {
+            XX = event.targetTouches[0].pageX;
+            YY = event.targetTouches[0].pageY;
+            if ( swipeX  && Math.abs(XX - startX) - Math.abs(YY - startY) > 0  ) {
+                $(this).bind('touchmove' , function(event) {
+                    event.preventDefault();
+                });
+                swipeY = false;
+                moveX = parseFloat($(this).css('transform').match(/\-?[0-9]+/g)[1]) + event.targetTouches[0].pageX - startX;
+                startX = event.targetTouches[0].pageX;
+                $(this).css('transform', 'translate3d('+moveX+'px, 0px,0px)');
+            } else if ( swipeY && Math.abs(XX - startX) - Math.abs(YY - startY) < 0 ) {
+                swipeX = false;
+            }
+        });
+        $(this).live('touchend', function(event) {
+            var date = new Date();
+            var time2 = date.getTime();
+            $(this).unbind('touchmove');
+            translateX = parseFloat($(this).css('transform').match(/\-?[0-9]+/g)[1]);
+            bj = windowWidth + translateX % windowWidth;
+            if ( time2 - time1 >= 300 ) {
+                bjz = windowWidth/2;//滑过1/2翻页
+                if ( bj <= bjz ) {
+                    left = translateX - bj;
+                } else {//复原
+                    left = translateX + (windowWidth - bj);
+                }
+            } else {
+                bj = Math.abs(translateX % windowWidth);
+                bjz = windowWidth/4;//滑过1/4翻页(点滑效果)
+                if ( translateX >= startLeft ) {//页面向右滑动
+                    if ( bj >= bjz ) {
+                        left = translateX + bj;
+                    } else {
+                        left = translateX -( windowWidth - bj );
+                    }
+                } else {//页面向左滑动
+                    if ( bj >= bjz * 3 ) {
+                        left = translateX + bj;
+                    } else {
+                        left = translateX -(windowWidth - bj);
+                        
+                    }
+                }  
+            }
+            if ( startLeft < left ) {//向右滑动
+                $(this).animate({transform:'translate3d(0px,0px,0px)'},200,"linear",function(){
+                index--;
+                if ( index === -1  ) {
+                    index = size - 1;
+                }
+                $(this).next().children('a').eq(index).addClass('index-ad-fixed-on').siblings().removeClass('index-ad-fixed-on');
+                $(this).css({transform : 'translate3d('+windowWidth/(-1)+'px,0px,0px)'});
+                $(this).children('a').last().remove().clone(true).insertBefore($(this).children('a').first());
+                }) ; 
+            } else if ( startLeft > left ) {//向左滑动
+                $(this).animate({transform:'translate3d('+windowWidth*(-2)+'px,0px,0px)'},200,"linear",function(){
+                index++;
+                if ( index === size  ) {
+                    index = 0;
+                }
+                $(this).next().children('a').eq(index).addClass('index-ad-fixed-on').siblings().removeClass('index-ad-fixed-on');
+                $(this).css({transform:'translate3d('+windowWidth/(-1)+'px,0px,0px)'});
+                $(this).children('a').first().remove().clone(true).appendTo($(this)); 
+                }) ; 
+            } else { //复原
+                $(this).css('transition' , 'transform 200ms ease-out');
+                $(this).css('transform', 'translate3d('+left+'px,0px,0px)');
+            }
+        });
+    };
+})($);
+(function ($) {
+    $.autoPlay = function(obj) {
+        var windowWidth = $(window).width(),
+        left = parseFloat(obj.css('transform').match(/\-?[0-9]+/g)[1]),
+        len = obj.children().size(),
+        flag = true;
+        windowWidth = windowWidth >= 640 ? 640 : windowWidth;
+        function showImg() {
+           obj.animate({transform:'translate3d('+windowWidth*(-2)+'px,0px,0px)'},300,"linear",function(){
+            index++;
+            if ( index === len  ) {
+                index = 0;
+            }
+            obj.next().children('a').eq(index).addClass('index-ad-fixed-on').siblings().removeClass('index-ad-fixed-on');
+            obj.css({transform:'translate3d('+windowWidth/(-1)+'px,0px,0px)'});
+            obj.children('a').first().remove().clone(true).appendTo(obj); 
+            }) ; 
+        }
+         adTimer = setInterval( function() {
+            showImg();
+        } , 4000);
+    }
+})($);
+var index = 0;
+$('.index-ad-slide').touchMove();
+$.autoPlay($('.index-ad-slide'));
+$('.index-ad-slide').on('touchstart' , function() {
+	clearInterval(adTimer);
+}).on('touchend' , function() {
+	// $.autoPlay($('.index-ad-slide'));
+});
+
+	</script>
+</body>
+</html>

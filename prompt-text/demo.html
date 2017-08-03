@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+		*{
+			padding: 0;
+			margin: 0;
+		}
+		.prompt-explain {
+        	margin-bottom: 50px;
+			border: 2px dotted blue;
+			line-height: 1.5;
+		}
+		.goods_details {
+			width: 128px;
+			margin-top: 200px !important;
+			word-break: break-all;
+			cursor: pointer;
+		}
+		.a {
+			margin-left:100px;
+		}
+		.b {
+			margin-left:200px;
+		}
+		.c {
+			margin-left:500px;
+		}
+
+
+		/*依赖样式开始*/
+		.show-all-info {
+			position: fixed;
+		    min-width: 250px;
+		    height: 20px;
+		    padding: 3px;
+		    background: #fff;
+		    border:1px solid #000;
+		}
+		/*依赖样式结束*/
+	</style>
+</head>
+<body>
+<div class="prompt-explain">
+	<dl>
+		<dt>详情提示组件说明:</dt>
+		<dd>
+			<p>作用：该组件用于在商品描述不完全的情况下显示商品的全部描述</p>
+			<p>依赖:依赖prompt-text.css</p>
+			<p>参数：new promptText(goods, {dataDescribe : 'data-describe',styleClass : 'show-all-info'}) 1.goods（必须）： 为要绑定该组件的dom元素集合；2.dataDescribe （可选）：为自定义属性用来存放显示的内容（后台输出时候要绑定）3.styleClass（可选）: 为显示框的样式</p>
+			<p>兼容：IE8+</p>
+		</dd>
+	</dl>
+</div>
+<p class="goods_details a" data-describe='11'>我是一个商品描述</p>
+<p class="goods_details b" data-describe='222'>我是一个商品描述</p>
+<p class="goods_details c" data-describe='333'>我是一个商品描述</p>
+<script src="prompt-text.js"></script>
+<script>
+// 调用
+var goods = document.querySelectorAll('.goods_details');
+var promptText = new promptText(goods, {
+	dataDescribe : 'data-describe',
+	styleClass : 'show-all-info'
+});
+</script>
+</body>
+</html>
