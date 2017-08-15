@@ -80,6 +80,12 @@ Vue.component('num-control', {
             if ( parseInt(this.val) > this.count ) {
                 this.val = this.count;
             }
+            //父组件自定义事件cb来获取子组件里面的val
+            this.$emit('cb', {
+                val : this.val,
+                index1 : this.index1,
+                index2 : this.index2
+            });
         }
     },
     ready : function() {
