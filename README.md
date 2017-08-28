@@ -16,4 +16,3 @@
 14. 抽奖demo<br/>
 15. 图片在线预览<br/>
 16. ajax+瀑布流<br/>
-http://www.vince.studio/2017/08/19/%E7%94%A8CSS%E8%AE%A9%E4%BD%A0%E7%9A%84%E6%96%87%E5%AD%97%E6%9B%B4%E6%96%87%E8%89%BA/
