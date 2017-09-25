@@ -14,7 +14,7 @@
 12.<a href="https://lvpangpang.github.io/components/sp/main1.html">移动端无缝轮播（jq版 + js版）</a><br/>
 13.<a href="https://lvpangpang.github.io/components/turntable/demo.html">抽奖demo</a><br/>
 14.<a href="https://lvpangpang.github.io/components/upload-pictures/demo.html"> 图片在线预览</a><br/>
-15.<a href="https://lvpangpang.github.io/components/water-fall/demo1.html"> ajax+瀑布流</a><br/>
+15.<a href="https://lvpangpang.github.io/components/water-fall/demo.html"> ajax+瀑布流</a><br/>
 
 
 
