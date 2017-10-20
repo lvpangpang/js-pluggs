@@ -57,7 +57,7 @@
             clearTimeout(method.tId);
             method.tId = setTimeout(function() {
                 method.apply(context, parma);
-            }, 200);
+            }, 30);
         },
 
         extend : function(options, tag) {
