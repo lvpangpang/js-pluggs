@@ -42,7 +42,7 @@
                     this.imgList[i].style.opacity = 0;
                     this.imgList[i].style.filter = "alpha(opacity = " + 0 + ")";
                     if( this.getImgTop(this.imgList[i], extendHeight) ) {
-                        this.k++;
+                        this.index++;
                         this.imgList[i].src = this.imgList[i].getAttribute(realSrcAtr);
                         this.imgList[i].removeAttribute(realSrcAtr);
                         this.imgList[i].style.webkitTransition = 'opacity 1s';
