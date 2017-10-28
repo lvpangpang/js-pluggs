@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="paging.css" />
+    <style type="text/css">
+    .prompt-explain {
+        margin-bottom: 50px;
+        border: 2px dotted blue;
+        line-height: 1.5;
+        box-sizing:border-box;
+    }
+    </style>
+</head>
+<body>
+<div class="prompt-explain">
+    <dl>
+        <dt>AJAX无刷新分页组件说明:</dt>
+        <dd>
+            <p>作用：该组件用于配合ajax进行分页显示</p>
+            <p>依赖:依赖jq和paging.css</p>
+            <p>参数：var options = {
+                        totalNum : 1000,//总数据条数(必须)
+                        totalPage : 100,//总页数(必须)
+                        showPageNum : 9//最多显示多少页数(可选)
+                    };
+                $('#pageBox').pageing(options,ajax);第二个参数是ajax请求的函数，参数为页码数（必须）。
+            </p>
+            <p>兼容：IE6+</p>
+        </dd>
+    </dl>
+</div>
+<div class="index-page" id="pageBox"></div>
+<script type="text/javascript" src="http://static.nysochina.com/static/js/lib/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="paging.js"></script>
+<script type="text/javascript">
+var options = {
+    totalNum : 200,//总数据条数
+    totalPage : 100,//总页数
+    showPageNum : 9//最多显示多少页数
+};
+$('#pageBox').pageing(options);
+</script>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Vuejs-分页</title>
+<style type="text/css">
+ body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td{margin:0;padding:0;}html{font-size: 12px;}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;}table{border-collapse:collapse;border-spacing:0;}q:before,q:after{content:'';}object,embed{vertical-align:top;}hr,legend{display:none;}img,abbr,acronym,fieldset{border:0;}ul li{list-style-type:none;}a,label{cursor:pointer;}img{vertical-align:bottom;margin:0;padding:0;}a{text-decoration:none;outline: none;}.clearfix:after{content: "."; visibility: hidden; display: block; height: 0.1px; font-size:0.1em; line-height: 0; clear: both;}.clearfix {*zoom:1;}input ,textarea,select{outline: none;border:1px solid #bfbfbf;}th{font-weight: 400;}button{cursor: pointer;border:none;outline: none;}textarea{border: 1px solid #ccc;resize: none;outline: none;overflow: hidden;padding: 5px;}select{outline: none;}.text_overflow{overflow:hidden;white-space: nowrap;
+text-overflow: ellipsis;}
+html {
+    font-family: "Microsoft YaHei",tahoma,arial,"Hiragino Sans GB","\5b8b\4f53",sans-serif;
+    font-size:14px;
+    color: #5c5d5e;
+}
+/* 公共分页模块 */
+.index-page {
+    width: 800px;
+    height: 40px;
+    margin: 100px auto;
+    padding-top:10px;
+}
+.index-page .index-target {
+    width:25px;
+    height:14px;
+    line-height: 14px;
+    padding:3px 5px;
+    border-radius:2px;
+    vertical-align: middle;
+}
+.index-page .target {
+    margin-right:30px;
+    color:#808080;
+}
+.index-page .page-main {
+    float:right;
+    margin-top:-10px;
+}
+.index-page .page-main li {
+    float:left;
+    width:37px;
+    height:37px;
+    border:1px solid #e6e6e6;
+    text-align:center;
+    line-height:37px;
+    margin-right: 5px;
+}
+.index-page .page-main .block {
+    display: block;
+}
+.index-page .page-main a {
+    display:block;
+    height:100%;
+    color:#c0c0c0;
+}
+.index-page .page-main a:hover ,
+.index-page .page-main .active {
+    background-color:#f75000;
+    color:#fff;
+}
+.index-page .page-main .unable-page {
+    cursor: not-allowed;
+    background-color: #dedede;
+}
+.index-page .page-main .unable-page:hover {
+    background-color: #dedede;
+}
+.index-page .page-main .prev ,
+.index-page .page-main .next {
+    display: block;
+    height: 9px;
+    padding: 13px 14px 15px 15px;
+}
+.index-page .page-main .prev-i ,
+.index-page .page-main .next-i {
+    display:block;
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-right: 8px solid #c0c0c0;
+    border-bottom: 6px solid transparent;
+}
+.index-page .page-main .next-i {
+    border-top: 6px solid transparent;
+    border-right: none;
+    border-left: 8px solid #c0c0c0;
+    border-bottom: 6px solid transparent;
+}
+.info-box {
+    width: 800px;
+    padding:20px 50px;
+    margin: 50px auto;
+    border: 2px dotted #e6e6e6;
+    text-align: center;
+}
+.info-header {
+    line-height: 2;
+    font-size: 28px;
+}
+</style>
+<style type="text/css">
+[v-cloak] {
+  display: none;
+}
+</style>
+</head>
+<body>
+<div>
+    <div class="info-box">
+        <p class="info-header" v-html="goodsList.updatetime"></p>
+        <p class="info-con" v-html="goodsList.content"></p>
+    </div>
+</div>
+<div class="index-page" id="pageBox" v-cloak>
+    总<span class="allNum" v-html="pageTotal"></span>页
+    至
+    <input type="text"  class="index-target" onkeyup="value=value.replace(/[^\d]/g,'')" /> 页 
+    <a href="javascript:;" class="target" class="goPage" v-on:click="inputJump()">跳转</a>
+    <ul class="page-main" id="pageMain" >
+        <li class="block"><a href="javascript:;" class="prev" v-bind:class="{'unable-page' : page==1}" v-on:click="goPre()"><i class="prev-i"></i></a></li>
+        <li v-if="pageTotal>0" v-for="n in showPageArr">
+            <a href="javascript:;" class="num-item" v-html="n" v-bind:class="{'active' : page==n}" data-page="{{n}}"></a>
+        </li>
+        <li class="block last"><a href="javascript:;" class="next" v-bind:class="{'unable-page' : page==pageTotal}" v-on:click="goNext()"><i class="next-i"></i></a></li>
+    </ul>
+</div>
+<script src='http://cdnjs.cloudflare.com/ajax/libs/vue/1.0.26/vue.min.js'></script>
+<script src="http://s.thsi.cn/js/jquery-1.7.2.min.js"></script>
+<script>
+// mock
+var data = {"error_code": 0,"reason": "Success","result": {"data":[{"content":"偶老婆有个嗜好，但凡别人送的东西一定要利用上，毫不拖延绝不浪费，比如上个月在超市抽奖中了一瓶快过期的醋，结果家里吃了一个多礼拜的饺子醋瓶见底才算完。。。今天中午老婆回来，刚进屋就举起手中袋子说：老公你看，今天居委会送东西了。偶心里一紧：又要玩什么里格啷？接过袋子打开一看，立马晕过去：尼玛半打安全套！","hashId":"78c42b5a6fe2922b700900a4c73e2464","unixtime":1491461630,"updatetime":"2017-04-06 14:53:50"},{"content":"儿子提著一个很大的提包，对爸爸说:「这个家我再也忍受不下去 了。我要离开, 我要自己去过那种天天有刺激 , 天天花天酒地, 天天有漂亮妹妹的生活。爸爸，你无论如何都不能阻挠我。」 爸爸一听，急急忙忙的说:「谁会阻挠你呀,我马上准备行李跟 你一起去。」","hashId":"cd2d1bd487447bd3b7dd05ed7999d6f3","unixtime":1491459230,"updatetime":"2017-04-06 14:13:50"},{"content":"电视上出现男女接吻的镜头。 上幼儿园的儿子：妈妈，你看，叔叔在给阿姨做人工呼吸！在救阿姨的命！ 妈妈：你还小，不懂，这不是人工呼吸！ 儿子：这就是！你看那阿姨闭着眼睛昏迷了，抢救完了，她就睁开眼睛苏醒了！ 妈妈：这些都是谁告诉你的？ 儿子：老师告诉我的！而且，昨天我还看到爸爸用人工呼吸，费了好长的时间，才把老师救过来的。","hashId":"1c2a620dd8d8850c87de3cd4b894e6e7","unixtime":1491459230,"updatetime":"2017-04-06 14:13:50"},{"content":"小蚊子央求母亲准许他去戏院看戏，苦苦求了半天之后，母亲终于答应了。“ 好吧，你可以去，”她叮嘱道，“可是人家鼓掌的时候你要当心。”","hashId":"dfc2142c45a6ef17de84aef7c65a3d51","unixtime":1491458630,"updatetime":"2017-04-06 14:03:50"},{"content":"两位先生一道去打猎。行进间其中一位忽然举枪射击，一只野鸭应声落地！另 一位说：“好枪法！不过你这一枪完全是多余的。从那么高的的地方掉下来，摔也 摔死了！”","hashId":"ab6775bcf0a50a856b06814a28c6d11b","unixtime":1491458630,"updatetime":"2017-04-06 14:03:50"},{"content":"甲：昨夜和朋友上酒家，小偷光顾我家里。 乙：偷去什么东西? 甲：太太以为是我酒醉夜归，不分青红皂白揍了他一顿，小偷高喊救命，幸好 警察来救了他。","hashId":"bbbcc5a203db91fdc42f61d74bd7dcb8","unixtime":1491458030,"updatetime":"2017-04-06 13:53:50"},{"content":"妻：我们怎么来庆祝我们的结婚纪念日? 夫：静默一分钟如何?","hashId":"83926f6df086a69a1dc7c1a2674c5e6c","unixtime":1491458030,"updatetime":"2017-04-06 13:53:50"},{"content":"甲：你那只会说话的鹦鹉还活着吗? 乙：唉，别提了，想不到我养了一星期，她就死了。 甲：是病死的? 乙：不，她和我太太比赛说话，说到力竭而死。","hashId":"cb924366205c12518f3825ac125d4b0c","unixtime":1491458030,"updatetime":"2017-04-06 13:53:50"},{"content":"1. 姑妈送给我一只微型步话机做为我生日礼物。她说如果我乖巧听话，明年会给我另一只。 2. 银行说昼夜营业？但我哪有那么多的时间跟它耗！？ 3. 实在百无聊赖。我就把车开到市中心的一个大停车场，坐在车里，数着有多少人 过来问我是不是要走。 4. 加油站有块儿牌子写着：“诚征员工”，下面另一牌上说：“劳驾自助”。我就 雇了自己，自己当老板。加满汽油，我把钱付给自己。最后，辞职，走人。 5. 世界上最胖的家伙怎么不去当冰球守门员？ 6. 你在森林中讲个笑话，没人听到，没人发笑。那还是笑话吗？","hashId":"b4eea13134ac11b1971e1341d84a8390","unixtime":1491458030,"updatetime":"2017-04-06 13:53:50"},{"content":"饶舌的妻子说：“你昨晚又在说梦话了。” 驯服的丈夫回答道：“是的，不然我就没有说话的机会了。”","hashId":"eb0fe1a7b9f86e1056461c09f665bbb2","unixtime":1491457430,"updatetime":"2017-04-06 13:43:50"},{"content":"“先生，我家里一只大公鸡把你花园里的花弄坏了，我真过意不去。” “太太，你不用道歉了，我的狗已经把你的大公鸡吃掉了。” “那太好了，我刚开车的时候，正好把你的狗碾死了。”","hashId":"f94c0a63f9dd3fa0919393b543e05aca","unixtime":1491457430,"updatetime":"2017-04-06 13:43:50"},{"content":"大哥弄了一支甚重的自动步枪在家里，每逢大嫂发脾气，大哥总是二话不说， 到旁边擦步枪去了。大嫂便吓得面容失色，一场内战还没开始，就结束了。 我忍不住问大哥：“大嫂怕你杀她？” 大哥很得意地说：“哪里，她是怕我自杀。”","hashId":"09b6006b197b1c3c4dd6fba5a3087d70","unixtime":1491457430,"updatetime":"2017-04-06 13:43:50"},{"content":"一个病人第一次去看医生。 “关于你的病情，你来这儿之前请教过什么人吗？”医生问。 “只问过拐角上药房的老板，”病人回答说。 那位医生最讨厌那些不是医生的人常常提出医疗方面的建议，他并不掩示这一 点。“那个傻瓜给你出了什么馊主意了？” “他让我来找你。”","hashId":"0c1cbfb9a698e4b04272fd917cff7902","unixtime":1491457430,"updatetime":"2017-04-06 13:43:50"},{"content":"12岁侄女哭着说：我失恋了。。”我问她怎么了，她说她被班主任调到前排，而她男朋友(13岁)接受不了异地恋，跟她分手了。。。","hashId":"90206b37f1502e2cb590981b452c915f","unixtime":1491457430,"updatetime":"2017-04-06 13:43:50"},{"content":"科长：桌上那两封信都寄出了吗? 工友：都寄出了，但我把邮票贴错了，国内的贴了国外的，国外的贴了国内的。 科长：你真不细心，后来重贴过了没有? 工友：因邮票撕不下来，我就把里面的信笺互相调换了。","hashId":"65d1941fe964778dd3d369e27223844f","unixtime":1491457430,"updatetime":"2017-04-06 13:43:50"},{"content":"妈：以后啊，你出门前都要好好收拾收拾，不要不洗头出门，特别是你要叫车的时候。 女儿：为啥啊？ 妈：北京户口，有本地车牌，开的都是2.0L或者1.8T以上排量的车，这条件，平时介绍对象都不好碰，现在滴滴都给你筛好了。 ---滴滴打车，一个严肃的婚恋平台。","hashId":"605da2f7e4ecde243a94748af5abb366","unixtime":1491456830,"updatetime":"2017-04-06 13:33:50"},{"content":"晚上吃饭我爸找来找去找不到酒，问我妈：我酒呢？ 我妈说被老鼠偷喝了。 老鼠呢？ 猫抓了。 猫呢？ 狗逮住了。 狗呢？ 狗在找酒呢！ 噗～ 哎，哎，爸你别围着我打呀，我只是没忍。。。","hashId":"b8ec83d7e81e9f9c154eb17bf761b782","unixtime":1491456830,"updatetime":"2017-04-06 13:33:50"},{"content":"因天气转凉，为了解决各位单身女性怕冷，本人今日正式加入滴滴暖被窝，限女性客户，有脸蛋有长相有经验的优先，超过30岁的不接！ 本人强烈推荐套餐：1万包过冬，5万包年，先转账再暖被窝。 小本生意，诚信暖被窝。 暖到你心花怒放！！暖到你走路扶墙！ 我的口号是：只有你想不到的，没有哥做不到的！","hashId":"c3c51814094bc1f459b8bc4c6f7562a8","unixtime":1491456830,"updatetime":"2017-04-06 13:33:50"},{"content":"A：“等我死后把我的骨灰撒到海里，不是怕有人在坟头蹦迪，也不为大海更宽广，只是为了我死了也能浪起来。” B：“我勒个去，能把死了没地儿埋说的这么有个性也是没谁了！”","hashId":"13762765363a3d1dc85803d1b118b5bd","unixtime":1491456830,"updatetime":"2017-04-06 13:33:50"},{"content":"“如果杀人不犯法，你先杀谁？” “我先杀谁？我TM先藏起来，泼皮二货太多，别把我杀了。。。”","hashId":"a421429cbb0e1a2b707ec4b54110bfd7","unixtime":1491456830,"updatetime":"2017-04-06 13:33:50"}]}};
+var vue = new Vue({
+    el : 'body',
+    data : {
+        page : 1,//当前页面
+        pageTotal : 12,//总页数
+        showPage : 10,//最多显示10个num-item
+        showPageArr : [],//显示的num-item数组
+        goodsList : {}//商品数据
+    },
+    ready : function() {
+        var oThis = this;
+        this.pageTotal = data['result']['data'].length;
+        if ( this.pageTotal<=this.showPage ) {
+            this.showPage = this.pageTotal;
+        }
+        this.showPageFn();
+
+        $(document).on('click', '.num-item', function() {
+            oThis.page = parseInt($(this).attr('data-page'));
+            oThis.showPageFn();
+        });
+    },
+    methods : {
+
+        getData : function() {
+            this.goodsList = data['result']['data'][this.page-1];
+        },
+
+        showPageFn : function() {
+            var min = 0 ,
+                max = this.showPage;
+            console.log(this.page);
+            this.showPageArr = [];
+            if( this.page <= this.showPage/2 ) {
+                min = 0;
+                max = this.showPage;
+            } else if (this.pageTotal - this.page <= Math.ceil(this.showPage/2) ) {
+                min = this.pageTotal - this.showPage;
+                max = this.pageTotal;
+            } else {
+                min = Math.round(this.page - this.showPage/2);
+                max = Math.round(this.page + this.showPage/2);
+            }
+            for(var i = min+1; i < max+1; i++) {
+                this.showPageArr.push(i);
+            }
+            this.getData();
+        },
+
+        goPre : function() {
+            if ( this.page==1 ) {
+                return ;
+            }
+            this.page--;
+            this.showPageFn();
+        },
+
+        goNext : function() {
+            if ( this.page==this.pageTotal ) {
+                return ;
+            }
+            this.page++;
+            this.showPageFn();
+        },
+
+        inputJump : function() {
+            var value = $('.index-target').val() ;
+            if ( parseInt(value)<1 || parseInt(value)>this.pageTotal|| value.trim()=='' ) {
+                this.page = 1;
+            } else {
+                this.page = parseInt(value);
+            }
+            $('.index-target').val('')
+            this.showPageFn();
+        }
+    }
+});
+</script>
+</body>
+</html>
+
+
+

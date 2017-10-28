@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>放大</title>
+	<style type="text/css">
+	.prompt-explain {
+        margin-bottom: 50px;
+		border: 2px dotted blue;
+		line-height: 1.5;
+	}
+	</style>
+	<link rel="stylesheet" type="text/css" href="magnifier.css" />
+</head>
+<body>
+	<div class="prompt-explain">
+		<dl>
+			<dt>商品放大镜组件说明:</dt>
+			<dd>
+				<p>作用：商品的图片放大</p>
+				<p>依赖:依赖magnifier.css</p>
+				<p>参数：new Magnifier(magnifierContainer)：1.magnifierContainer(必须)：绑定该放大镜组件的dom元素。注意：该组件一定要在window.onload方法下调用否则IE下获取不到图片的宽度</p>
+				<p>兼容：IE8+</p>
+			</dd>
+		</dl>
+	</div>
+	<div class="magnifier-container" id="magnifierContainer">
+		<div class="magnifier-small" id="magnifierSmall">
+			<span class="magnifier-move" id="magnifierMove"></span>
+			<img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1487036753&di=3736e702684addd6f3e8a9e1a4e9597d&imgtype=jpg&er=1&src=http%3A%2F%2Fimg000.hc360.cn%2Fg8%2FM03%2F1B%2F3C%2FwKhQtVNd86CEAHyoAAAAACABNu0876.jpg" />
+		</div>
+		<div class="magnifier-big" id="magnifierBig">
+			<img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1487036753&di=3736e702684addd6f3e8a9e1a4e9597d&imgtype=jpg&er=1&src=http%3A%2F%2Fimg000.hc360.cn%2Fg8%2FM03%2F1B%2F3C%2FwKhQtVNd86CEAHyoAAAAACABNu0876.jpg" />
+		</div>
+	</div>
+	<script src='magnifier.js'></script>
+	<script type="text/javascript">
+	window.onload  = function() {
+		var magnifierContainer = document.getElementById('magnifierContainer');
+		new Magnifier(magnifierContainer);
+	}
+	</script>
+</body>
+</html>

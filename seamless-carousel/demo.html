@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>轮播（面向对象版）</title>
+	<style type="text/css">
+	*{
+		padding: 0;
+		margin:0;
+	}
+	.prompt-explain {
+        margin-bottom: 50px;
+		border: 2px dotted blue;
+		line-height: 1.5;
+	}
+	</style>
+	<link rel="stylesheet" type="text/css" href="seamless-carousel.css" />
+</head>
+<body>
+	<div class="prompt-explain">
+		<dl>
+			<dt>无缝轮播组件说明:</dt>
+			<dd>
+				<p>作用：该组件用于在在一块区域展示多块内容，如果只有一张图片，则直接显示一张图片</p>
+				<p>依赖:依赖seamless-carousel.css</p>
+				<p>参数：new Carousel(obj1, {haspagination : true,hasButton : true, durtutionTime:3000}); 1.obj（必须）： 为要绑定该组件的dom元素；2.haspation（可选）：默认为true，显示下面的小圆点，设为flase，不显示小圆点; 3.hasButton（可选）: 默认为flase，不显示两边的左右点击按钮，设为true，则显示; 4 durtionTime（可选）:默认为3000，每隔多长时间切换</p>
+				<p>兼容：IE8+</p>
+			</dd>
+		</dl>
+	</div>
+	<div class="carousel-container">
+		<ul id="carouselMain0" class="carousel-main">
+			<li>
+				<a href="###"><img src="images/1.jpg" /></a>	
+			</li>
+		</ul>
+		<div class="pagination" id="pagination"></div>
+		<a href="###" class="carousel-left">Left</a>
+		<a href="###" class="carousel-right">Right</a>
+	</div>
+	<div class="carousel-container">
+		<ul id="carouselMain" class="carousel-main">
+			<li>
+				<a href="###"><img src="images/1.jpg" /></a>	
+			</li>
+			<li>
+				<a href="###"><img src="images/2.jpg" /></a>	
+			</li>
+			<li>
+				<a href="###"><img src="images/3.jpg" /></a>	
+			</li>
+		</ul>
+		<div class="pagination" id="pagination"></div>
+		<a href="###" class="carousel-left">Left</a>
+		<a href="###" class="carousel-right">Right</a>
+	</div>
+	<div class="carousel-container">
+		<ul id="carouselMain1" class="carousel-main">
+			<li>
+				<a href="###"><img src="images/1.jpg" /></a>	
+			</li>
+			<li>
+				<a href="###"><img src="images/2.jpg" /></a>	
+			</li>
+			<li>
+				<a href="###"><img src="images/3.jpg" /></a>	
+			</li>
+		</ul>
+		<div class="pagination" id="pagination"></div>
+		<a href="###" class="carousel-left">Left</a>
+		<a href="###" class="carousel-right">Right</a>
+	</div>
+	<script type="text/javascript" src='seamless-carousel.es6.js'></script>
+	<script type="text/javascript">
+	// 调用1
+	var obj0 = document.getElementById('carouselMain0');
+	var carouse =  new Carousel(obj0);
+
+	// 调用2
+	var obj = document.getElementById('carouselMain');
+	var carouse =  new Carousel(obj);
+
+	// 调用3
+	var obj1 = document.getElementById('carouselMain1');
+	var carouse =  new Carousel(obj1, {
+		haspagination : true,
+		hasButton : true,
+		durtionTime : 5000
+	});
+</script>
+</body>
+</html>

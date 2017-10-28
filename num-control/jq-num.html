@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+<style type="text/css">
+*{
+    padding:0;
+    margin: 0;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+.clearfix:after {
+    content: ".";
+    visibility: hidden;
+    display: block;
+    height: .1px;
+    font-size: .1em;
+    line-height: 0;
+    clear: both;
+}
+.quantity-selector {
+    width: 8.571rem;
+    line-height: 2.9rem;
+    border: 1px solid #d1d6e4;
+    border-radius: 3px;
+}
+.quantity-selector .reduce, 
+.quantity-selector .add {
+    float: left;
+    width: 33.33%;
+    border-right: 1px solid #d1d6e4;
+    text-align: center;
+    cursor: pointer;
+}
+.quantity-selector .number {
+    float: left;
+    width: 33.33%;
+    height: 2.857rem;
+    padding: .5rem 0;
+    line-height: 1rem;
+    border: none;
+    text-align: center;
+}
+.quantity-selector .add {
+    border-left: 1px solid #d1d6e4;
+    border-right: none;
+}
+.quantity-selector  .disable {
+    cursor: not-allowed;
+    color: #d2d2d2;
+}
+</style>
+</head>
+<body>
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<p>初始数量为1，库存为10</p>
+<div class="quantity-selector clearfix">
+    <span class="reduce">－</span>
+    <input type="number" value="1" class="number" data-account="10" />
+    <span class="add">＋</span>
+</div>
+
+<p>初始数量为5，库存为5</p>
+<div class="quantity-selector clearfix">
+    <span class="reduce">－</span>
+    <input type="number" value="10" class="number" data-account="5" />
+    <span class="add">＋</span>
+</div>
+
+<p>初始数量为2，库存为2</p>
+<div class="quantity-selector clearfix">
+    <span class="reduce">－</span>
+    <input type="number" value="2" class="number" data-account="2" />
+    <span class="add">＋</span>
+</div>
+<script src="https://cdn.bootcss.com/jquery/1.2.3/jquery.min.js"></script>
+<script>
+(function($) {
+    $.fn.numContrl = function(opt) {
+        return this.each(function() {
+            var dft = {
+                disable : 'disable',
+                realStock : null
+            },
+                options = $.extend(dft, opt),
+                oThis = $(this),
+                numReduce = oThis.find('.reduce'),
+                numAdd = oThis.find('.add'),
+                num = oThis.find('.number'),
+                dataMaxNum =  options.realStock || parseInt(num.attr('data-account')),
+                reg1 = /^\d*$/,
+                reg2 = /^0/;
+            oThis.value = function() {
+                num.attr('value' , num.val());
+            };
+            oThis.change = function() {
+                if( !reg1.test( num.val() ) || reg2.test( num.val() ) ) {
+                    num.val(1);
+                }
+                if ( num.val() > dataMaxNum ) {
+                    num.val( dataMaxNum );
+                }
+                num.blur(function() {
+                    if( $(this).val() === '' ) {
+                        num.val(1);
+                    }
+                });
+                numAdd.removeClass( options.disable );
+                numReduce.removeClass( options.disable );
+                if ( num.val() == 1 ) {
+                    numReduce.addClass( options.disable );
+                }
+                if ( num.val() == dataMaxNum ) {
+                    numAdd.addClass( options.disable );
+                }
+                oThis.value();
+            };
+            oThis.change();
+            numReduce.click(function() {
+                if ( $(this).hasClass(options.disable) ) {
+                    return;
+                } else {
+                    num.val( parseInt(num.val()) - 1 );
+                    oThis.change();
+                }
+            });
+            numAdd.click(function() {
+                if ( $(this).hasClass(options.disable) ) {
+                    return;
+                } else {
+                    num.val( parseInt(num.val()) + 1 );
+                    oThis.change();
+                }
+            });
+            num.keyup(function() {
+                oThis.change();
+            }).keydown(function() {
+                oThis.change();
+            }).blur(function() {
+                oThis.change();
+            });
+        });
+    }
+})($);
+$('.quantity-selector').numContrl({
+    realStock : 10
+});
+</script> 
+</body>
+</html>

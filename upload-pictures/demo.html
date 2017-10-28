@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>图片预览组件</title>
+    <style type="text/css">
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .img-box {
+            width: 200px;
+            height: 200px;
+            border: 1px solid #dedede;
+            overflow: hidden;
+        }
+        .img-box img {
+            max-width: 100%;
+        }
+        .prompt-explain {
+            margin-bottom: 50px;
+            border: 2px dotted blue;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="prompt-explain">
+        <dl>
+            <dt>图片预览组件说明:</dt>
+            <dd>
+                <p>作用：该组件用于本地图片的预览</p>
+                <p>依赖:无依赖</p>
+                <p>参数：var upload = new uploadPic(upload)： 1.upload：整个容器的节点（必须）</p>
+                <p>兼容：IE6+</p>
+            </dd>
+        </dl>
+    </div>
+    <div class="uploadPic">
+        <input type="file" class="btnDom"  />
+        <div class="upload">上传图片</div>
+        <p>预览:</p>
+        <div class="img-box">
+            <img class="picDom"  alt="" />
+        </div>
+    </div>
+    <div class="uploadPic1">
+        <input type="file" class="btnDom"  />
+        <div class="upload">上传图片</div>
+        <p>预览:</p>
+        <div class="img-box">
+            <img class="picDom"  alt="" />
+        </div>
+    </div>
+<script src='upload-pictures.js'></script>
+<script>
+var upload = document.querySelector('.uploadPic');
+var upload = new uploadPic(upload);
+
+var upload1 = document.querySelector('.uploadPic1');
+var upload1 = new uploadPic(upload1);
+</script>
+
+</body>
+</html>

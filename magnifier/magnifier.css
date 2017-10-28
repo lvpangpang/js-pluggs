@@ -1,0 +1,33 @@
+*{padding: 0;margin: 0;}
+.magnifier-container {
+	position: relative;
+	width: 1000px;
+	height: 400px;
+}
+.magnifier-container .magnifier-small {
+	float: left;
+	position: relative;
+	width: 400px;
+	height: 100%;
+}
+.magnifier-container .magnifier-small img {
+	width: 100%;
+	height: 100%;
+}
+.magnifier-container .magnifier-big {
+	float: left;
+	margin-left: 10px;
+	width: 400px;
+	height: 100%;
+	border:1px solid #dedede;
+	overflow: hidden;
+}
+.magnifier-container .magnifier-move {
+	display: none;
+	position: absolute;
+	background: #ff7500;
+	cursor: crosshair;
+	opacity:0.5;
+	filter:alpha(opacity=50);
+	z-index: 10;
+}

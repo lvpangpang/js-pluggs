@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport">
+<meta content="yes" name="apple-mobile-web-app-capable">
+<meta content="black" name="apple-mobile-web-app-status-bar-style">
+<meta content="telephone=no" name="format-detection">
+<meta content="email=no" name="format-detection">
+<title>移动端无缝轮播</title>
+<style type="text/css">
+*{margin:0;padding: 0;}
+html{font-family: Helvetical;color: rgb(102, 102, 102);overflow-y:hidden ;min-width: 320px;max-width: 640px;margin: 0 auto;}
+a{text-decoration: none;color: rgb(102, 102, 102);}
+input{border:none;outline: none;}
+input::-webkit-input-placeholder{color:#fff;}
+input:focus::-webkit-input-placeholder{color:#EEEEEE;}
+a,button,input,textarea{-webkit-tap-highlight-color: rgba(0,0,0,0;)}
+.index-ad-box {position: relative;left: 0;top: 0;width: 100%;height: 10rem;margin-top: 3rem;overflow: hidden;}
+.index-ad-slide {height: 100%;}
+.index-ad-slide li {float: left;width: 100%;height: 100%;}
+.index-ad-slide a {display: block;width: 100%;height: 100%;}
+.index-ad-slide img {width: 100%; height: 100%;}
+.index-ad-fixed{position: absolute;right: 2rem;bottom:.5rem;width: 6rem;height: .6rem;display: -webkit-flex;display: flex;-webkit-justify-content:space-around;}
+.index-ad-fixed a{float: left;width: .6rem;height: .6rem;border-radius: 60%;background: #fff;}
+.index-ad-fixed .index-ad-fixed-on{background: #eb4f38;}
+</style>
+</head>
+<body>
+<!-- <section class="index-ad-box">
+	<ul class="index-ad-slide" id="indexAdSlide">
+        <li>
+            <a href="###" class="index-ad-0" num='4'>
+                <img src="http://imgsrc.baidu.com/forum/pic/item/c75c10385343fbf2e7a09d60b07eca8064388fe0.jpg">
+            </a>
+        </li>
+		<li>
+            <a href="###" class="index-ad-1" num='0'>
+                <img src="http://hiphotos.baidu.com/%B4%DE%BF%F3%C8%CB/pic/item/c14a8c2cdc7ffefe8b139929.jpg">
+            </a>
+        </li>
+        <li>
+            <a href="javascript:;" class="index-ad-2" num='1'>
+                <img src="http://imgsrc.baidu.com/forum/w%3D580%3Bcp%3Dtieba%2C10%2C403%3Bap%3D%D2%A1%CC%EC%B0%C9%2C90%2C411/sign=8cadbb5443a7d933bfa8e47b9d70b263/54fbb2fb43166d22cc5494d4472309f79052d24b.jpg">
+            </a>
+        </li>
+        <li>
+            <a href="javascript:;" class="index-ad-3" num='2'>
+                <img src="http://hiphotos.baidu.com/%B4%DE%BF%F3%C8%CB/pic/item/14e6452fbab07f2a1e308901.jpg">
+            </a>
+        </li>
+	</ul>
+	<div class="index-ad-fixed">
+		<a href="###" class="index-ad-fixed-on"></a>
+		<a href="###"></a>
+		<a href="###"></a>
+		<a href="###"></a>
+		<a href="###"></a>
+	</div>
+</section> -->
+
+<section class="index-ad-box">
+    <ul class="index-ad-slide" id="indexAdSlide">
+        <li>
+            <a href="https://www.baidu.com/" class="index-ad-0" num='4'>
+                <img src="images/1.jpg">
+            </a>
+        </li>
+        <li>
+            <a href="https://www.taobao.com/" class="index-ad-1" num='0'>
+                <img src="images/2.jpg">
+            </a>
+        </li>
+        <li>
+            <a href="https://www.jd.com/" class="index-ad-2" num='1'>
+                <img src="images/3.jpg">
+            </a>
+        </li>
+        <li>
+            <a href="https://www.hao123.com/" class="index-ad-3" num='2'>
+                <img src="images/4.jpg">
+            </a>
+        </li>
+    </ul>
+    <div class="index-ad-fixed">
+    </div>
+</section>
+<script src="http://s.thsi.cn/js/m/js/zepto.min.js"></script>
+<script type="text/javascript">
+var winWidth = document.body.clientWidth;
+document.querySelector('html').style.fontSize = winWidth/750 * 32 + 'px';
+(function(win, doc) {
+    function TouchCarousel(obj, options) {
+        this.winWidth = doc.body.clientWidth;
+        this.obj = obj;
+        this.parentNode = this.obj.parentNode;
+        this.sliding = this.obj.querySelectorAll('li');
+        this.pagination = this.parentNode.querySelector('#pagination');
+        this.startLeft = 0;
+        this.endLeft = 0;
+        this.startX = 0;
+        this.startY = 0;
+        this.moveX = 0;
+        this.moveY = 0;
+        this.swipeX = true;
+        this.swipeY = true;    
+        this.paginationItem = null;
+        this.pagination = this.obj.parentNode.querySelector('.index-ad-fixed');
+        this.index = 0;
+        this.num = this.sliding.length;
+        this.reg = /\-?[0-9]+/g;
+        this.startTime = 0;
+        this.endTime = 0;
+        this.init(obj, options);
+    }
+    TouchCarousel.prototype = {
+        init : function(obj, options) {
+            var oThis = this,
+                optionDefault = {
+                hasButton : false,
+                haspagination : true,
+                durtionTime : 3000
+            };
+            options = options || {};
+            oThis.extend(options, optionDefault);
+            for(var i=0; i<this.num; i++) {
+                this.sliding[i].style.width = this.winWidth + 'px';
+            }
+            oThis.obj.style.width =  (oThis.num+2)*oThis.winWidth+ 'px';
+            oThis.obj.style.webkitTransform = 'translate3d('+-this.winWidth+'px,0px,0px)';
+            if( oThis.num<=1 ) {
+                return false;
+            } else {
+                var firstNode = oThis.sliding[0].cloneNode(true),
+                    lastNode = oThis.sliding[oThis.num - 1].cloneNode(true);
+                oThis.obj.insertBefore(lastNode, oThis.sliding[0]);
+                oThis.obj.appendChild(firstNode);
+                for(var i=0; i<oThis.num; i++) {
+                    var a = doc.createElement('a');
+                    oThis.pagination.appendChild(a);
+                }
+                oThis.paginationItem = oThis.pagination.querySelectorAll('a');
+                oThis.paginationItem[0].className = 'index-ad-fixed-on';
+                oThis.obj.addEventListener('touchstart', function() {
+                    var date = new Date();
+                        oThis.startTime = date.getTime();
+                    oThis.startLeft = parseFloat(oThis.obj.style.webkitTransform.match(oThis.reg)[1]);
+                    oThis.startX = event.targetTouches[0].pageX;
+                    oThis.startY = event.targetTouches[0].pageY;  
+                }, false);
+                oThis.obj.addEventListener('touchmove', function(event) {
+                    oThis.moveX = event.targetTouches[0].pageX;
+                    oThis.moveY = event.targetTouches[0].pageY;
+                    if ( oThis.swipeX  && Math.abs(oThis.moveX - oThis.startX) >= Math.abs(oThis.moveY - oThis.startY) ) {
+                        event.preventDefault();
+                        oThis.swipeY = false;
+                        var x = parseFloat(oThis.obj.style.webkitTransform.match(oThis.reg)[1]) + event.targetTouches[0].pageX - oThis.startX;
+                        oThis.startX = event.targetTouches[0].pageX;
+                        oThis.obj.style.webkitTransform =  'translate3d('+ x +'px,0px,0px)';
+                    } else if ( oThis.swipeY && Math.abs(oThis.moveX - oThis.startX) < Math.abs(oThis.moveY - oThis.startY) ) {
+                        oThis.swipeX = false;
+                    }
+                }, false);
+                oThis.obj.addEventListener('touchend', function(event) {
+                    var date = new Date();
+                        oThis.endTime = date.getTime();
+                        translateX = parseFloat(oThis.obj.style.webkitTransform.match(oThis.reg)[1]);
+                        distance = oThis.winWidth + translateX % oThis.winWidth;
+                        halfWinWith = oThis.winWidth/2;
+                        left = 0;
+                    if( Math.abs(oThis.startLeft-translateX)<10 ) {
+                        oThis.obj.style.webkitTransition = 'transform 100ms ease-out';
+                        oThis.obj.style.webkitTransform =  'translate3d('+ oThis.startLeft +'px,0px,0px)';
+                        return;
+                    }
+                    if ( oThis.endTime - oThis.startTime >= 300 ) {
+                        if ( distance <= halfWinWith ) {
+                            left = translateX - distance;
+                        } else {
+                            left = translateX + (oThis,winWidth - distance);
+                        }
+                    } else {
+                        distance = Math.abs(translateX % oThis.winWidth);
+                        halfWinWith = oThis.winWidth / 4;
+                        if ( translateX >= oThis.startLeft ) {
+                            if ( distance >= halfWinWith ) {
+                                left = translateX + distance;
+                            } else {
+                                left = translateX -( oThis.winWidth - distance );
+                            }
+                        } else {
+                            if ( distance >= halfWinWith * 3 ) {
+                                left = translateX + distance;
+                            } else {
+                                left = translateX -(oThis.winWidth - distance);
+                            }
+                        }  
+                    }
+                    oThis.obj.style.webkitTransition = 'transform 100ms ease-out';
+                    oThis.obj.style.webkitTransform =  'translate3d('+ left +'px,0px,0px)';
+                    oThis.index = -parseInt(oThis.obj.style.webkitTransform.match(oThis.reg)[1])/oThis.winWidth - 1;
+                    setTimeout(function() {
+                        if( oThis.index===-1 ) {
+                            oThis.index = oThis.num-1;
+                            oThis.obj.style.webkitTransition = 'transform 0ms ease-out';
+                            oThis.obj.style.webkitTransform =  'translate3d('+ -oThis.winWidth * (oThis.num) +'px,0px,0px)';
+                        } else if( oThis.index===oThis.num ) {
+                            oThis.index = 0;
+                            oThis.obj.style.webkitTransition = 'transform 0ms ease-out';
+                            oThis.obj.style.webkitTransform =  'translate3d('+ -oThis.winWidth +'px,0px,0px)';
+                        }
+                        for(var i=0; i<oThis.num; i++) {
+                            oThis.paginationItem[i].className = '';
+                        }
+                        oThis.paginationItem[oThis.index].className = 'index-ad-fixed-on';
+                    },100);
+                }, false);
+            }
+        },
+        css : function(styelList) {
+            var style = null;
+            if (window.getComputedStyle) {
+                style = window.getComputedStyle(this,null)[styelList];
+            } else { 
+                style = this.currentStyle[styelList];
+            }
+            return style;
+        },
+        extend : function(options,tag) {
+           for(var i in tag) {
+                if( !(i in options) ) {
+                    options[i] = tag[i];
+                }
+           }
+           return this;
+        }
+    }
+    win.TouchCarousel= TouchCarousel;
+})(window, document)
+
+var indexAdSlide = document.querySelector('#indexAdSlide');
+var touch = new TouchCarousel(indexAdSlide);
+
+	</script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<template>
+<div>
+    <div class="quantity-selector clearfix">
+        <span class="reduce" @click="reduce()" :class="{disable : this.val==1}">－</span>
+        <input type="text" v-model="val" class="number" @blur="blur()" readonly="true" />
+        <span class="add" @click="add()" :class="{disable : this.val==this.count}">＋</span>
+    </div>
+</div>
+</template>
+
+<script>
+export default {
+    props : ['number', 'count', 'index1', 'index2'],
+    data : function() {
+        return {
+            val :  this.number
+        }
+    },
+    watch: {
+        val() {
+            if ( !/^\d*$/.test(this.val) || /^0/.test(this.val) ) {
+                this.val = 1;
+            }
+            if ( parseInt(this.val) > this.count ) {
+                this.val = this.count;
+            }
+            this.$emit('cb', {
+                val : this.val,
+                index1 : this.index1,
+                index2 : this.index2
+            });
+        },
+    },
+    mounted : function() {
+        this.init();
+        if ( this.val > this.count ) {
+            this.val = this.count;
+        }
+    },
+    methods : {
+        add() {
+            this.init();
+            if ( this.val + 1 > this.count ) {
+                return;
+            }
+            this.val += 1;
+            this.$emit('cb1', {
+                val : 1,
+                index1 : this.index1,
+                index2 : this.index2
+            });
+        },
+        reduce() {
+            this.init();
+            if ( this.val - 1 <= 0 ) {
+                return;
+            }
+            this.val -= 1;
+            this.$emit('cb2', {
+                val : -1,
+                index1 : this.index1,
+                index2 : this.index2
+            });
+        },
+        blur() {
+            if ( this.val === '' ) {
+                this.val = 1;
+            }
+        },
+        init() {
+            this.val = parseInt(this.val);
+        }
+    }
+}
+</script>
+
+<style>
+@import '../css/common.css';
+.quantity-selector {
+    width: 8.571rem;
+    line-height: 2.9rem;
+    border: 1px solid #d1d6e4;
+    border-radius: 3px;
+}
+.quantity-selector .reduce,
+.quantity-selector .add {
+    float: left;
+    width: 33.33%;
+    border-right: 1px solid #d1d6e4;
+    text-align: center;
+    cursor: pointer;
+}
+.quantity-selector .number {
+    float: left;
+    width: 33.33%;
+    height: 2.857rem;
+    padding: .5rem 0;
+    line-height: 1rem;
+    border: none;
+    text-align: center;
+}
+.quantity-selector .add {
+    border-left: 1px solid #d1d6e4;
+    border-right: none;
+}
+.quantity-selector  .disable {
+    color: #d2d2d2;
+}
+</style>

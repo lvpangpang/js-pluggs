@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JAXA + 瀑布流</title>
+    <link rel="stylesheet" type="text/css" href="water-fall.css" />
+    <style type="text/css">
+    .prompt-explain {
+        margin-bottom: 50px;
+        border: 2px dotted blue;
+        line-height: 1.5;
+        font-size: 16px;
+        padding: 10px;
+    }
+    </style>
+</head>
+<body>
+    <div class="prompt-explain">
+        <dl>
+            <dt>ajax + 瀑布流组件说明:</dt>
+            <dd>
+                <p>作用：该组件用于以瀑布流的形式显示数据</p>
+                <p>依赖:依赖water-fall.css</p>
+                <div>
+                    <p>var water = new WaterFall(waterFall //整个瀑布流的容器（必须）, data.img // 数据源（必须）, {</p>
+                    <p>ulBoxNum : 4,//设置显示多少列（可选）</p>
+                    <p>eachNew : 4,//设置每次加载多少数据（可选，自己设置的话，为了防止极端情况，必须大于等于4）</p>
+                    <p>ulBoxMargin : 10,//设置每个ul直接的间距（可选）</p>
+                    <p>minHeight : 240,//设置每个li的最小高度（可选）</p>
+                    <p>maxHeight : 300,//设置每个li的最大高度（可选）</p>
+                    <p>lastTip : '数据显示完毕！'//设置数据完全加载后的提示语（可选）</p>
+                    });</div>
+                <p>兼容：IE8+</p>
+            </dd>
+        </dl>
+    </div>
+    <div id="waterFall" class="water-fall clearfix"></div>
+    <script src='water-fall.js'></script>
+    <script>
+    var waterFall = document.querySelector('#waterFall');
+    var data = {
+        img :[
+            {
+                imgSrc : 'images/1.jpg',
+                imgDer : '这是一张图片1'
+            },
+            {
+                imgSrc : 'images/2.jpg',
+                imgDer : '这是一张图片2'
+            },
+            {
+                imgSrc : 'images/3.jpg',
+                imgDer : '这是一张图片3'
+            },
+            {
+                imgSrc : 'images/4.jpg',
+                imgDer : '这是一张图片4'
+            },
+            {
+                imgSrc : 'images/5.jpg',
+                imgDer : '这是一张图片5'
+            },
+            {
+                imgSrc : 'images/6.jpg',
+                imgDer : '这是一张图片6'
+            },
+            {
+                imgSrc : 'images/7.jpg',
+                imgDer : '这是一张图片7'
+            },
+            {
+                imgSrc : 'images/1.jpg',
+                imgDer : '这是一张图片8'
+            },
+            {
+                imgSrc : 'images/4.jpg',
+                imgDer : '这是一张图片9'
+            },
+            {
+                imgSrc : 'images/3.jpg',
+                imgDer : '这是一张图片10'
+            },
+            {
+                imgSrc : 'images/7.jpg',
+                imgDer : '这是一张图片1'
+            },
+            {
+                imgSrc : 'images/2.jpg',
+                imgDer : '这是一张图片2'
+            },
+            {
+                imgSrc : 'images/1.jpg',
+                imgDer : '这是一张图片3'
+            },
+            {
+                imgSrc : 'images/4.jpg',
+                imgDer : '这是一张图片4'
+            },
+            {
+                imgSrc : 'images/3.jpg',
+                imgDer : '这是一张图片5'
+            },
+            {
+                imgSrc : 'images/1.jpg',
+                imgDer : '这是一张图片6'
+            },
+            {
+                imgSrc : 'images/2.jpg',
+                imgDer : '这是一张图片7'
+            },
+            {
+                imgSrc : 'images/1.jpg',
+                imgDer : '这是一张图片8'
+            },
+            {
+                imgSrc : 'images/6.jpg',
+                imgDer : '这是一张图片9'
+            },
+            {
+                imgSrc : 'images/5.jpg',
+                imgDer : '这是一张图片10'
+            },
+            {
+                imgSrc : 'images/3.jpg',
+                imgDer : '这是一张图片1'
+            },
+            {
+                imgSrc : 'images/6.jpg',
+                imgDer : '这是一张图片2'
+            },
+            {
+                imgSrc : 'images/3.jpg',
+                imgDer : '这是一张图片3'
+            },
+            {
+                imgSrc : 'images/4.jpg',
+                imgDer : '这是一张图片4'
+            },
+            {
+                imgSrc : 'images/1.jpg',
+                imgDer : '这是一张图片5'
+            },
+            {
+                imgSrc : 'images/6.jpg',
+                imgDer : '这是一张图片6'
+            },
+            {
+                imgSrc : 'images/2.jpg',
+                imgDer : '这是一张图片7'
+            },
+            {
+                imgSrc : 'images/5.jpg',
+                imgDer : '这是一张图片8'
+            },
+            {
+                imgSrc : 'images/7.jpg',
+                imgDer : '这是一张图片9'
+            },
+            {
+                imgSrc : 'images/3.jpg',
+                imgDer : '这是一张图片10'
+            },
+            {
+                imgSrc : 'images/1.jpg',
+                imgDer : '这是一张图片1'
+            },
+            {
+                imgSrc : 'images/2.jpg',
+                imgDer : '这是一张图片2'
+            },
+            {
+                imgSrc : 'images/5.jpg',
+                imgDer : '这是一张图片3'
+            },
+            {
+                imgSrc : 'images/3.jpg',
+                imgDer : '这是一张图片4'
+            },
+            {
+                imgSrc : 'images/2.jpg',
+                imgDer : '这是一张图片5'
+            },
+            {
+                imgSrc : 'images/1.jpg',
+                imgDer : '这是一张图片6'
+            },
+            {
+                imgSrc : 'images/5.jpg',
+                imgDer : '这是一张图片7'
+            },
+            {
+                imgSrc : 'images/3.jpg',
+                imgDer : '这是一张图片8'
+            },
+            {
+                imgSrc : 'images/2.jpg',
+                imgDer : '这是一张图片9'
+            },
+            {
+                imgSrc : 'images/6.jpg',
+                imgDer : '这是一张图片10'
+            },
+            {
+                imgSrc : 'images/3.jpg',
+                imgDer : '这是一张图片1'
+            },
+            {
+                imgSrc : 'images/2.jpg',
+                imgDer : '这是一张图片2'
+            },
+            {
+                imgSrc : 'images/6.jpg',
+                imgDer : '这是一张图片3'
+            },
+            {
+                imgSrc : 'images/2.jpg',
+                imgDer : '这是一张图片4'
+            },
+            {
+                imgSrc : 'images/5.jpg',
+                imgDer : '这是一张图片5'
+            },
+            {
+                imgSrc : 'images/1.jpg',
+                imgDer : '这是一张图片6'
+            },
+            {
+                imgSrc : 'images/3.jpg',
+                imgDer : '这是一张图片7'
+            },
+            {
+                imgSrc : 'images/5.jpg',
+                imgDer : '这是一张图片8'
+            },
+            {
+                imgSrc : 'images/4.jpg',
+                imgDer : '这是一张图片9'
+            },
+            {
+                imgSrc : 'images/7.jpg',
+                imgDer : '这是一张图片10'
+            }
+        ]
+    };
+    var water = new WaterFall(waterFall, data.img, {
+        ulBoxNum : 4,//设置显示多少列（可选）
+        eachNew : 4,//设置每次加载多少数据（可选）
+        ulBoxMargin : 10,//设置每个ul直接的间距（可选）
+        minHeight : 240,//设置每个li的最小高度（可选）
+        maxHeight : 300,//设置每个li的最大高度（可选）
+        lastTip : '数据显示完毕！'//设置数据完全加载后的提示语（可选）
+    });
+    </script>
+</body>
+</html>
