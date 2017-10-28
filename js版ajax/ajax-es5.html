@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ajax</title>
+</head>
+<body>
+<div id="text"></div>
+<script>
+// ES5版本
+function Ajax(options) {
+    this.options = {
+        url : options.url,
+        type : (options.type || 'get').toLowerCase(),
+        async : options.async || true,
+        data : options.data || null,
+        dataType : options.dataType || 'json',
+        success : options.success || function() {},
+        error : options.error || function() {}
+    };
+    this.xhr = new XMLHttpRequest();
+    this.init();
+}
+
+Ajax.prototype = {
+    init : function() {
+        this.param();
+        this.get();
+        this.post();
+        this.ready();
+    },
+
+    param : function() {
+        if ( this.options.data!==null ) {
+            var str = '';
+            for ( var x in this.options.data ) {
+                str += x + '=' + this.options.data[x] + '&';
+            }
+            this.options.data = str.replace(/&$/, '');
+        }
+    },
+
+    get : function() {
+        if ( this.options.type=== 'get' ) {
+            if ( this.options.data!==null ) {
+                this.xhr.open(this.options.type, this.options.url + '?' + this.options.data, this.options.async);
+            } else {
+                this.xhr.open(this.options.type, this.options.url, this.options.async);
+            }
+            this.xhr.send();
+        }
+    },
+
+    post : function() {
+        if ( this.options.type==='post' ) {
+            // 2.连接服务器（方法，请求地址，true:异步传输）
+            this.xhr.open(this.options.type, this.options.url, this.options.async);
+            // 3.post方式需要自己设置http的请求头，来模仿表单提交。
+            this.xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8"); 
+            this.xhr.send(this.options.data);
+        }
+    },
+
+    ready : function() {
+        this.xhr.onreadystatechange = (function() {
+            if ( this.xhr.readyState===4 ) {
+                if ( this.xhr.status===200 ) {
+                    this.options.success(JSON.parse(this.xhr.responseText));
+                } else {
+                    if ( failed ) {
+                        failed(this.xhr.status);
+                    }
+                }
+            }
+        }).bind(this);
+    }
+};
+
+new Ajax({
+    type : 'post',
+    url : '/category/getCategoryTwo.shtml',
+    data : {
+        categoryId:4
+    },
+    success : function(data) {
+        document.querySelector('#text').innerHTML = JSON.stringify(data);
+    }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ajax</title>
+</head>
+<body>
+<script>
+// ajax请求的最基本的4个步骤
+function ajax1() {
+    // 1.创建ajax对象
+    var xhr = null;
+    if ( window.XMLHttpRequest ) {
+        xhr = new XMLHttpRequest();
+    }
+    // 2.连接服务器（方法，请求地址，异步传输）
+    xhr.open('GET', 'a.js', true);
+    // 3.发送请求
+    xhr.send();
+    // 4.接受返回数据
+    xhr.onreadystatechange = function() {
+        // 每当readyStatus改变时，就会触发onreadystatuschange事件
+        // 0：请求未初始化
+        // 1：服务器连接已建立
+        // 2：请求已接受
+        // 3：请求处理中
+        // 4：请求已完成，且相应就绪
+        if ( xhr.readyState===4 ) {
+            // http状态码
+            // 1XX : 信息展示
+            // 2XX ：成功
+            // 3XX : 重定向
+            // 4XX : 客户端错误
+            // 5XX : 服务器错误
+            if ( xhr.status===200 ) {
+                success(xhr.responseText);
+            } else {
+                if ( failed ) {
+                    failed(xhr.status);
+                }
+            }
+        }
+    };
+}
+
+function ajax(options) {
+    // 初始化参数
+    var optionsData = {
+        url : options.url,
+        type : (options.type || 'get').toLowerCase(),
+        async : options.async || true,
+        data : options.data || null,
+        dataType : options.dataType || 'json',
+        success : options.success || function() {},
+        error : options.error || function() {}
+    },
+        // 1.创建ajax对象
+        xhr = new XMLHttpRequest();
+
+    // 将请求参数转为请求的格式,不管get还是post都是要这一步，只不过post参数转化后作为send()的主体传递，get作为url后面字符串
+    if ( optionsData.data!==null ) {
+        var str = '';
+        for ( var x in optionsData.data ) {
+            str += x + '=' + optionsData.data[x] + '&';
+        }
+        optionsData.data = str.replace(/&$/, '');
+    }
+
+    // get请求发送参数的方式
+    if ( optionsData.type=== 'get' ) {
+        if ( optionsData.data!==null ) {
+            xhr.open(optionsData.type, optionsData.url + '?' + optionsData.data, optionsData.async);
+        } else {
+            xhr.open(optionsData.type, optionsData.url, optionsData.async);
+        }
+        xhr.send();
+    }
+
+    // post请求发送参数的方式
+    if ( optionsData.type==='post' ) {
+        // 2.连接服务器（方法，请求地址，true:异步传输）
+        xhr.open(optionsData.type, optionsData.url, optionsData.async);
+        // 3.post方式需要自己设置http的请求头，来模仿表单提交。
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8"); 
+        xhr.send(optionsData.data);
+    }
+
+    // 4.接受返回数据
+    xhr.onreadystatechange = function() {
+        // 每当readyStatus改变时，就会触发onreadystatuschange事件
+        // 0：请求未初始化
+        // 1：服务器连接已建立
+        // 2：请求已接受
+        // 3：请求处理中
+        // 4：请求已完成，且相应就绪
+        if ( xhr.readyState===4 ) {
+            // http状态码
+            // 1XX : 信息展示
+            // 2XX ：成功
+            // 3XX : 重定向
+            // 4XX : 客户端错误
+            // 5XX : 服务器错误
+            if ( xhr.status===200 ) {
+                // console.log(xhr.responseText);
+                optionsData.success(JSON.parse(xhr.responseText));
+            } else {
+                if ( failed ) {
+                    failed(xhr.status);
+                }
+            }
+        }
+    };
+}
+
+ajax({
+    url : '/indexMo.shtml',
+    success : function(data) {
+        console.log(data);
+    }
+});
+
+ajax({
+    type : 'post',
+    url : '/category/getCategoryTwo.shtml',
+    data : {
+        categoryId:4
+    },
+    success : function(data) {
+        console.log(data);
+    }
+});
+
+</script>
+</body>
+</html>
