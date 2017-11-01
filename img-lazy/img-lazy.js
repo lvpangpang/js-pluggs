@@ -16,10 +16,7 @@
             this.extend(options, optionDefault);
             this.imgList = document.querySelectorAll("["+ options.realSrcAtr +"]");
             this.imgLen = this.imgList.length;
-
-            this.addEvent.call(window, 'load', function() {
-                oThis.throttle(oThis.lazyLoadImg, [options.realSrcAtr, options.extendHeight], oThis);
-            });
+            oThis.throttle(oThis.lazyLoadImg, [options.realSrcAtr, options.extendHeight], oThis);
             this.addEvent.call(window, 'resize', function() {
                 oThis.throttle(oThis.lazyLoadImg, [options.realSrcAtr, options.extendHeight], oThis);
             });
