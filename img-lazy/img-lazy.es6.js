@@ -10,9 +10,7 @@ class lazyImg {
         options = options,
         oThis = this;
         this.extend(options, optionDefault);
-        this.addEvent.call(window, 'load', function() {
-            oThis.throttle(oThis.lazyLoadImg, ['data-src', options.extendHeight], oThis);
-        });
+        oThis.throttle(oThis.lazyLoadImg, ['data-src', options.extendHeight], oThis);
         this.addEvent.call(window, 'resize', function() {
             oThis.throttle(oThis.lazyLoadImg, ['data-src', options.extendHeight], oThis);
         });
