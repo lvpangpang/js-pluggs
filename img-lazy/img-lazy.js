@@ -67,8 +67,8 @@
         },
 
         addEvent : function(event , fn) {
-            if(win.addEventLinister ) {
-                this.addEventLinister(event, fn, false);
+            if( win.addEventListener ) {
+                this.addEventListener(event, fn, false);
             } else if ( win.attachEvent ) {
                 this.attachEvent('on' + event, fn);
             } else {
