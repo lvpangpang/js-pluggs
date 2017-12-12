@@ -57,8 +57,8 @@ class lazyImg {
        return this;
     }
     addEvent(event , fn) {
-        if( window.addEventLinister ) {
-            this.addEventLinister(event, fn, false);
+        if( window.addEventListener ) {
+            this.addEventListener(event, fn, false);
         } else if ( window.attachEvent ) {
             this.attachEvent('on' + event, fn);
         } else {
