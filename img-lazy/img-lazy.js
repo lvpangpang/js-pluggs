@@ -1,6 +1,6 @@
 ;(function(win, doc) {
     function ImgLazy(params) {
-        this.params = params;
+        this.params = params || {};
         this.init(params);
     }
     ImgLazy.prototype = {
@@ -10,7 +10,7 @@
                 return;
             }
             this.scrollTimer = null;
-            this.params.defaultImg && this.addDefaultImg();
+            this.addDefaultImg();
             this.scrollListener();
             this.addEvent(window, 'scroll', this.scrollListener);
             this.addEvent(window, 'resize', this.scrollListener);
@@ -23,10 +23,11 @@
                     tag : 'data-src',
                     throtteTime : 16, 
                     distance : 0,
-                    isBg : false,
                     defaultImg : null
                 },
-                elements = this.params.elements;
+                elements = null;
+            this.extend(this.params, optionDefault);
+            elements = document.querySelectorAll("["+ this.params.tag +"]");
             if ( !elements.length ) {
                 return;
             }
@@ -37,19 +38,18 @@
                 this.elements = this.elements.concat(this.newElementsDomArr);
             }
             this.elements = this.newElementsDomArr;
-            this.extend(this.params, optionDefault);
             this.getWH();
         },
 
-        // 添加默认图片
+        // 添加默认图片并且添加动态效果
         addDefaultImg : function() {
             var newElements = this.newElementsDomArr,
-                len = newElements.length,
-                isBg = this.params.isBg,
                 defaultImg = this.params.defaultImg;
             newElements.forEach( function( item, index, arr ) {
-                isBg ? item.style.backgroundImage = 'url(' + defaultImg + ')' : item.setAttribute('src', defaultImg);
-                item.style.webkitTransition = 'opacity 2s';
+                if ( defaultImg ) {
+                    item.setAttribute('src', defaultImg)
+                }
+                item.style.webkitTransition = 'opacity 1s';
                 item.style.opacity = .5;
                 item.style.filter = "alpha(opacity = " + 50 + ")";
             });
@@ -103,7 +103,8 @@
         loadItem : function(ele) {
             var tag = this.params.tag,
                 imgUrl = ele.getAttribute(tag);
-            imgUrl && ( this.isBg ? ele.style.backgroundImage = 'url(' + imgUrl + ')' : ( ele.setAttribute('src', imgUrl) || ele.removeAttribute(tag) ) );
+            ele.setAttribute('src', imgUrl);
+            ele.removeAttribute(tag);
             ele.style.opacity = 1;
             ele.style.filter = "alpha(opacity = " + 1 + ")";
         },
