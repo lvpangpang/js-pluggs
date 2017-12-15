@@ -130,7 +130,7 @@ function Swiper(dom, options) {
     //  圆点domList
     this.paginationList = null;
     // 当前显示的index
-    this.index = 0;
+    this.index = 1;
     // banner总数
     this.num = this.slidingList.length;
     this.reg = /\-?[0-9]+/g;
@@ -142,6 +142,8 @@ function Swiper(dom, options) {
     this.oneEnd = true;
     // 定时器
     this.timer = null;
+    // 是否第一次
+    this.isFirst = true;
     // 初始化
     this.init();
 }
@@ -190,11 +192,7 @@ Swiper.prototype = {
                 this.swiperDom.style.webkitTransform = 'translate3d(0px,0px,0px)';                
             }
 
-            // if ( this.options.autoplay >= 1000 ) {
-            //     this.timer = setInterval(function() {
-            //         this.autoMove();
-            //     }.bind(this), this.options.autoplay );
-            // }
+            this.setTimer();
 
             // 事件绑定
             this.swiperDom.addEventListener('touchstart', function(event) {
@@ -217,7 +215,9 @@ Swiper.prototype = {
 
     // touchstart事件
     startListener : function(event) {
-        var target = event.targetTouches[0];         
+        var target = event.targetTouches[0];
+        // 禁止自动播放（如果有）
+        clearInterval(this.timer);        
         this.startTime = (new Date()).getTime();
         this.startLeft = parseFloat(this.swiperDom.style.webkitTransform.match(this.reg)[1]);
         this.startX = target.pageX;
@@ -240,6 +240,8 @@ Swiper.prototype = {
 
     // touchend事件
     endListener : function (event) {
+        // 开启自动播放（如果有）
+        this.setTimer();
         this.oneEnd = false;
         this.endTime = (new Date()).getTime();
         this.endLeft = parseFloat(this.swiperDom.style.webkitTransform.match(this.reg)[1]);
@@ -276,9 +278,12 @@ Swiper.prototype = {
 
     // 动态滑动结束事件
     transitionEndListener : function() {
+        this.isFirst = false;
         this.swiperDom.addEventListener("webkitTransitionEnd", function() {
             this.oneEnd = true;
             this.swiperDom.style.webkitTransition = 'transform 0ms';
+            this.index = -(parseFloat(this.swiperDom.style.webkitTransform.match(this.reg)[1]))/this.winWidth - 1;
+            
             // 对2种临界状态做一个判断
             if ( this.options.loop ) {
                 if( this.index===-1 ) {
@@ -301,10 +306,18 @@ Swiper.prototype = {
     },
 
     autoMove : function() {
-        this.index++;
+        this.isFirst ? this.index++ : this.index= this.index + 2;
         this.swiperDom.style.webkitTransition = 'transform 300ms';
         this.swiperDom.style.webkitTransform =  'translate3d('+ (-this.index * this.winWidth) +'px,0px,0px)';
         this.transitionEndListener();
+    },
+
+    setTimer : function() {
+         if ( this.options.autoplay >= 1000 ) {
+            this.timer = setInterval(function() {
+                this.autoMove();
+            }.bind(this), this.options.autoplay );
+        }
     },
 
     cal : function( x1, y1, x2, y2 ) {
