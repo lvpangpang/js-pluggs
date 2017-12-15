@@ -15,6 +15,8 @@
 13.<a href="https://lvpangpang.github.io/js-pluggs/turntable/demo.html">抽奖demo</a><br/>
 14.<a href="https://lvpangpang.github.io/js-pluggs/upload-pictures/demo.html"> 图片在线预览</a><br/>
 15.<a href="https://lvpangpang.github.io/js-pluggs/water-fall/demo.html"> ajax+瀑布流</a><br/>
+16.<a href="https://lvpangpang.github.io/js-pluggs/blob/master/mobile%20-carousel/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E8%BD%AE%E6%92%AD%E6%8F%92%E4%BB%B6.html"> ajax+瀑布流</a><br/>
+
 
 
 
