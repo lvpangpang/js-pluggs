@@ -79,22 +79,22 @@ img {
     <div class="swiper-wrapper">
         <div class="swiper-slide">
             <a href="https://www/baidu.com" class="link-item">
-                <img src='http://image.mihui365.com/bbc/advImg/34431182537630048.jpg'>
+                <img data-src='http://image.mihui365.com/bbc/advImg/34431182537630048.jpg'>
             </a>
         </div>
         <div class="swiper-slide">
             <a href="https://www/baidu.com" class="link-item">
-                <img src='http://image.mihui365.com/bbc/advImg/33924789914206030.jpg'>
+                <img data-src='http://image.mihui365.com/bbc/advImg/33924789914206030.jpg'>
             </a>
         </div>
         <div class="swiper-slide">
             <a href="https://www/baidu.com" class="link-item">
-                <img src='http://image.mihui365.com/bbc/advImg/34430847379451184.jpg'>
+                <img data-src='http://image.mihui365.com/bbc/advImg/34430847379451184.jpg'>
             </a>
         </div>
         <div class="swiper-slide">
             <a href="https://www/baidu.com" class="link-item">
-                <img src='http://image.mihui365.com/bbc/advImg/34430694429036769.jpg'>
+                <img data-src='http://image.mihui365.com/bbc/advImg/34430694429036769.jpg'>
             </a>
         </div>
     </div>
@@ -294,6 +294,12 @@ Swiper.prototype = {
                     this.index = 0;
                     this.swiperDom.style.webkitTransform =  'translate3d('+ -this.winWidth +'px,0px,0px)';
                 }
+            }
+
+            // 如果开启了懒加载模式
+            var imgDom = this.slidingList[this.index].querySelector('img');
+            if ( imgDom.getAttribute('data-src') ) {
+                imgDom.src = imgDom.getAttribute('data-src')
             }
             
             // 给pagination里面的圆点添加对应样式
