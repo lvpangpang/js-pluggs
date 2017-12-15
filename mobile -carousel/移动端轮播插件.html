@@ -290,7 +290,7 @@ Swiper.prototype = {
                     this.index = this.num-1;
                     this.swiperDom.style.webkitTransform =  'translate3d('+ (-this.winWidth * (this.num)) +'px,0px,0px)';
                 }
-                if( this.index===this.num ) {
+                if( this.index>=this.num ) {
                     this.index = 0;
                     this.swiperDom.style.webkitTransform =  'translate3d('+ -this.winWidth +'px,0px,0px)';
                 }
