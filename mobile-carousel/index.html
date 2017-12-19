@@ -313,7 +313,6 @@ Swiper.prototype = {
         if ( this.swipeX  && this.cal(this.startX, this.startY, this.moveX, this.moveY) ) {
             this.swipeY = false;
             var x = this.moveX - this.startX;
-            console.log(Math.abs(x));
             if ( Math.abs(x) >= this.winWidth ) {
                 return;
             }
