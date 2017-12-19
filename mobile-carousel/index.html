@@ -312,7 +312,12 @@ Swiper.prototype = {
         // 判断是X轴滑动
         if ( this.swipeX  && this.cal(this.startX, this.startY, this.moveX, this.moveY) ) {
             this.swipeY = false;
-            var x = parseFloat(this.startLeft + this.moveX - this.startX);
+            var x = this.moveX - this.startX;
+            console.log(Math.abs(x));
+            if ( Math.abs(x) >= this.winWidth ) {
+                return;
+            }
+            x = parseFloat(this.startLeft + x);
             this.swiperDom.style.webkitTransform =  'translate3d('+ x +'px,0px,0px)';
         } else {
             this.swipeX = false;
@@ -427,12 +432,12 @@ Swiper.prototype = {
          }
      },
 
-    //  实时获取当前滑动容器的translate3d值
+     //  实时获取当前滑动容器的translate3d值
      getTranslate3d : function() {
          return parseFloat(this.swiperDom.style.webkitTransform.match(this.reg)[1]);
      },
 
-    //  判断是否X轴滑动
+        //  判断是否X轴滑动
      cal : function( x1, y1, x2, y2 ) {
         return Math.abs(x2 - x1) >= Math.abs(y2 - y1);
      },
