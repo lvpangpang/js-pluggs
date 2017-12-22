@@ -215,8 +215,6 @@ function Swiper(dom, options) {
     this.startTime = 0;
     // 每次手指离开屏幕的时间点
     this.endTime = 0;
-    // 判断一次滑动是否完整结束,可以防止用户滑动过快导致一些bug
-    this.oneEnd = true;
     // 定时器
     this.timer = null;
     // 是否第一次
@@ -272,16 +270,12 @@ Swiper.prototype = {
 
             // 绑定手指触摸事件
             this.swiperDom.addEventListener('touchstart', function(event) {
-                if ( this.oneEnd ) {
-                    this.startListener(event);
-                }
+                this.startListener(event);
             }.bind(this));
 
             // 绑定手指滑动事件            
             this.swiperDom.addEventListener('touchmove', function(event) {
-                if ( this.oneEnd ) {
-                     this.moveListener(event);
-                }
+                this.moveListener(event);
             }.bind(this));
 
             // 绑定手指结束滑动事件            
@@ -294,8 +288,6 @@ Swiper.prototype = {
     // touchstart事件
     startListener : function(event) {
         var target = event.targetTouches[0];
-        // 禁止自动播放（如果设置了定时器时间间隔）
-        clearInterval(this.timer);       
         // 获取当前时间，后面用来判断是否点滑需要用到 
         this.startTime = (new Date()).getTime();
         // 记录当前滑动容器的translate3d值
@@ -325,9 +317,10 @@ Swiper.prototype = {
 
     // touchend事件
     endListener : function (event) {
+        // 禁止自动播放（如果设置了定时器时间间隔）
+        clearInterval(this.timer); 
         // 重新开启自动播放（如果设置了定时器时间间隔）
         this.setTimer();
-        this.oneEnd = false;
         // 获取当前时间，后面用来判断是否点滑需要用到         
         this.endTime = (new Date()).getTime();
         this.endLeft = this.getTranslate3d();
@@ -337,7 +330,7 @@ Swiper.prototype = {
             left = this.startLeft;
         // 手指接触屏幕时间大于300ms，开启点滑效果
         if ( this.endTime - this.startTime <= 300 ) {
-            halfWinWith = 30;
+            halfWinWith = 10;
         }
         
         if ( this.endLeft <= this.startLeft ) {
@@ -365,7 +358,6 @@ Swiper.prototype = {
     transitionEndListener : function() {
         this.isFirst = false;
         this.swiperDom.addEventListener("webkitTransitionEnd", function() {
-            this.oneEnd = true;
             this.swiperDom.style.webkitTransition = 'transform 0ms';
             // 重新计算当前index
             this.index = -(this.getTranslate3d())/this.winWidth - 1;
@@ -467,3 +459,6 @@ var swiper1 = new Swiper('.swiper-container1', {
 </script>
 </body>
 </html>
+
+<!--1.快递滑动后，定时轮播变快
+2.划着划着有时候突然划不动-->
