@@ -327,10 +327,12 @@ Swiper.prototype = {
         // 滑动距离
         var distance = Math.abs(this.endLeft - this.startLeft),
             halfWinWith = this.winWidth/2,
-            left = this.startLeft;
+            left = this.startLeft,
+            time = 300;
         // 手指接触屏幕时间大于300ms，开启点滑效果
         if ( this.endTime - this.startTime <= 300 ) {
             halfWinWith = 10;
+            time = 50;
         }
         
         if ( this.endLeft <= this.startLeft ) {
@@ -348,7 +350,7 @@ Swiper.prototype = {
                 left = this.startLeft + this.winWidth;
             }
         }
-        this.swiperDom.style.webkitTransition = 'transform 300ms';
+        this.swiperDom.style.webkitTransition = 'transform ' + time + 'ms';
         this.swiperDom.style.webkitTransform =  'translate3d('+ left +'px,0px,0px)';
         // 触发动态滑动结束事件
         this.transitionEndListener();
