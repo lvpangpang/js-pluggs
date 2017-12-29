@@ -12,8 +12,8 @@
         padding:0;
     }
     .turntable {
-        width: 240px;
-        height:  240px;
+        width: 200px;
+        height:  200px;
         margin: 30px auto;
         position: relative;
     }
@@ -47,9 +47,9 @@
 			<p>作用：该组件用于转盘抽奖</p>
 			<p>依赖：无依赖</p>
 			<div>
-				<p>let run1 = new TurnTable(</p>
+				<p>var run1 = new TurnTable(</p>
 				<p>turntable1,//要绑定的dom元素（必须）</p> 
-				<p>()=>{let data = {
+				<p>()=>{var data = {
 				hasChance : false,
 				prize :0
 			};
@@ -67,128 +67,126 @@
     <div id="turntableBg" class="turntable_bg"><img src="./images/activity-lottery-1.png"></div>
     <div id="turntableRun" class="turntable_run"><img src="./images/activity-lottery-2.png"></div>
 </div>
-<script src="http://google.github.io/traceur-compiler/bin/traceur.js"></script>
 <script type="text/javascript">
-	(function(win, doc) {
-		function TurnTable(obj, callBack, options) {
-			this.obj = obj;
-			this.turntableBg = this.obj.querySelector('.turntable_bg');
-			this.turntableRun = this.obj.querySelector('.turntable_run');
-			let dat = callBack();
-			this.hasChance = dat.hasChance;//后台传过来的是否还有权限
-			this.prize = dat.prize;//后台传过来的中奖参数
-			this.a = 0.01;
-			this.steps = [];
-			this.lostDeg = [36, 66, 96, 156, 186, 216, 276, 306, 336];
-			this.running = false;
-			this.init(options);
-		}
-		TurnTable.prototype = {
-			constructor : TurnTable,
-			init : function(options) {
-				let defaultOptions = {
+(function(win, doc) {
+	function TurnTable(obj, callBack, options) {
+		this.obj = obj;
+		this.turntableBg = this.obj.querySelector('.turntable_bg');
+		this.turntableRun = this.obj.querySelector('.turntable_run');
+		var dat = callBack();
+		this.hasChance = dat.hasChance;//后台传过来的是否还有权限
+		this.prize = dat.prize;//后台传过来的中奖参数
+		this.a = 0.01;
+		this.steps = [];
+		this.lostDeg = [];
+		this.running = false;
+		this.init(options);
+	}
+	TurnTable.prototype = {
+		constructor : TurnTable,
+		init : function(options) {
+			var defaultOptions = {
+				totalDeg : 360*6,//一共转多少圈
+				prizeDeg : [0, 120, 240],//中奖的角度分布
+			},
+				oThis = this;
+			options = options || {};
+			this.extend(defaultOptions, options);
+			for ( var i =0 ; i< 8 ; i++ ) {
+				this.lostDeg.push( 22.5 + i * 45 );
+			}
+			console.log(this.lostDeg);
+		},
+		countSteps : function(options) {
+			var t = Math.sqrt(2 * options.totalDeg / this.a),
+				v = this.a * t;
+			for (var i = 0; i < t; i++) {
+				this.steps.push((2 * v * i - this.a * i * i) / 2);
+			}
+			this.steps.push(this.totalDeg);
+		},
+		start : function(prize, options) {
+			var oThis = this,
+				now = 0;
+			this.running = true;
+			prize === 3 ? options.totalDeg += this.lostDeg[parseInt(this.lostDeg.length * Math.random())] : options.totalDeg += options.prizeDeg[prize];
+			this.countSteps(options);
+			if( win.requestAnimationFrame ) {
+				win.cancelAnimationFrame(oThis.timer);
+				function animate() {
+					oThis.turntableBg.style.webkitTransform = 'rotate(' + oThis.steps[now++]  + 'deg)';
+					if( now < oThis.steps.length ) {
+						oThis.timer = requestAnimationFrame(animate);
+					} else {
+						oThis.running = false;
+						oThis.steps.length = 0;
+						
+						return false;
+					}
+				}
+				animate();
+			} else {
+				var timer = setInterval(function() {
+					if( now >= oThis.steps.length ) {
+						oThis.running = false;
+						oThis.steps.length = 0;
+						if( oThis.prize === 0 ) {
+							alert('一等奖！');
+						} else if( oThis.prize === 1 ) {
+							alert('二等奖！');
+						} else if( oThis.prize === 2 ) {
+							alert('三等奖！');
+						} else {
+							alert('剩下的都是没奖的！');
+						}
+						clearInterval(timer);
+					} else {
+						oThis.turntableBg.style.webkitTransform = 'rotate(' + oThis.steps[now++]  + 'deg)';
+					}
+				} , 8);
+			}
+		},
+		extend : function(obj1, obj2) {
+			for(var x in obj1) {
+				if( !obj2[x] ) {
+					obj2[x] = obj1[x];
+				}
+			}
+			return obj2;
+		},
+	};
+	win.TurnTable = TurnTable;
+})(window, document);
+
+var turntable1 = document.querySelector('#turnTable1');
+var run1 = new TurnTable(
+	turntable1,
+	function(){
+		var data = {
+			hasChance : true,
+			prize :0
+		};
+		return data;
+	}
+);
+
+document.querySelector("#turntableRun").onclick = function() {
+	if( run1.hasChance ) {
+		if (run1.running) {
+			return false;
+		} else {
+			run1.start(0, {
 					totalDeg : 360*6,//一共转多少圈
 					prizeDeg : [0, 120, 240],//中奖的角度分布
-				},
-					oThis = this;
-				options = options || {};
-				this.extend(defaultOptions, options);
-				turntableRun.onclick = function() {
-					if( oThis.hasChance ) {
-						if (oThis.running) {
-				            return false;
-				        } else {
-				            oThis.start(oThis.prize, options);
-				        }
-					} else {
-						alert('您没有权限进行抽奖或者您的机会已经用光了！');
-					}
-					
-				};
-			},
-			countSteps : function(options) {
-				let t = Math.sqrt(2 * options.totalDeg / this.a),
-		        	v = this.a * t;
-		        for (let i = 0; i < t; i++) {
-		            this.steps.push((2 * v * i - this.a * i * i) / 2);
-		        }
-		        this.steps.push(this.totalDeg);
-			},
-			start : function(prize, options) {
-				let oThis = this,
-					now = 0;
-				this.running = true;
-        		prize === 3 ? options.totalDeg += this.lostDeg[parseInt(this.lostDeg.length * Math.random())] : options.totalDeg += options.prizeDeg[prize];
-        		this.countSteps(options);
-        		if( win.requestAnimationFrame ) {
-					win.cancelAnimationFrame(oThis.timer);
-					function animate() {
-						oThis.turntableBg.style.webkitTransform = 'rotate(' + oThis.steps[now++]  + 'deg)';
-						if( now < oThis.steps.length ) {
-							oThis.timer = requestAnimationFrame(animate);
-						} else {
-							oThis.running = false;
-			                oThis.steps.length = 0;
-			    			if( oThis.prize === 0 ) {
-				        		alert('一等奖！');
-				        	} else if( oThis.prize === 1 ) {
-				        		alert('二等奖！');
-				        	} else if( oThis.prize === 2 ) {
-				        		alert('三等奖！');
-				        	} else {
-				        		alert('剩下的都是没奖的！');
-				        	}
-				        	return false;
-						}
-					}
-					animate();
-				} else {
-					var timer = setInterval(function() {
-			    		if( now >= oThis.steps.length ) {
-			    			oThis.running = false;
-			                oThis.steps.length = 0;
-			    			if( oThis.prize === 0 ) {
-				        		alert('一等奖！');
-				        	} else if( oThis.prize === 1 ) {
-				        		alert('二等奖！');
-				        	} else if( oThis.prize === 2 ) {
-				        		alert('三等奖！');
-				        	} else {
-				        		alert('剩下的都是没奖的！');
-				        	}
-			    			clearInterval(timer);
-			    		} else {
-			    			oThis.turntableBg.style.webkitTransform = 'rotate(' + oThis.steps[now++]  + 'deg)';
-			    		}
-			    	} , 8);
 				}
-			},
-	    	extend : function(obj1, obj2) {
-	    		for(var x in obj1) {
-	    			if( !obj2[x] ) {
-	    				obj2[x] = obj1[x];
-	    			}
-	    		}
-	    		return obj2;
-	    	},
-		};
-		win.TurnTable = TurnTable;
-	})(window, document);
-	let turntable1 = document.querySelector('#turnTable1');
-	let run1 = new TurnTable(
-		turntable1,
-		()=>{
-			let data = {
-				hasChance : true,
-				prize :0
-			};
-			return data;
-		},
-		{
-			totalDeg : 360*6,//一共转多少圈
-			prizeDeg : [0, 120, 240],//中奖的角度分布
+			);
 		}
-	);
+	} else {
+		alert('您没有权限进行抽奖或者您的机会已经用光了！');
+	}
+	
+};
+console.log(run1);
 
 </script>
 </body>
