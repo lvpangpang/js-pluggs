@@ -274,9 +274,7 @@ Swiper.prototype = {
 
             // 绑定手指触摸事件
             this.swiperDom.addEventListener('touchstart', function(event) {
-                if ( this.oneEnd ) {
-                    this.startListener(event);
-                }
+                this.startListener(event);
             }.bind(this));
 
             // 绑定手指滑动事件            
@@ -288,7 +286,9 @@ Swiper.prototype = {
 
             // 绑定手指结束滑动事件            
             this.swiperDom.addEventListener('touchend', function(event) {
-                this.endListener(event);
+                if ( this.oneEnd ) {
+                    this.endListener(event);
+                }                
             }.bind(this));
 
             // 绑定TransitionEnd事件 
@@ -372,12 +372,13 @@ Swiper.prototype = {
         this.isFirst = false;
         transitionFlag = false;
         this.oneEnd = true;
+        console.log(this.oneEnd);
         this.swiperDom.style.transitionDuration = '0ms';
         // 重新计算当前index
         this.index = Math.floor(-(this.getTranslate3d())/this.winWidth - 1);
         
         // 对2种临界状态做一个判断
-        if( this.index===-1 ) {
+        if( this.index<=-1 ) {
             this.index = this.num-1;
             this.swiperDom.style.webkitTransform =  'translate3d('+ (-this.winWidth * (this.num)) +'px,0px,0px)';
         }
@@ -460,7 +461,7 @@ var swiper = new Swiper('.swiper-container', {
     // 是否开启懒加载
     lazyLoading : true,
     // 自动轮播时间
-    autoplay: 3000
+    autoplay: 0
 });
 
 // var swiper1 = new Swiper('.swiper-container1', {
