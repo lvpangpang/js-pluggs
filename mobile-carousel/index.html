@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -215,6 +216,8 @@ function Swiper(dom, options) {
     this.startTime = 0;
     // 每次手指离开屏幕的时间点
     this.endTime = 0;
+    // 判断一次滑动是否完整结束,可以防止用户滑动过快导致一些bug
+    this.oneEnd = true;
     // 定时器
     this.timer = null;
     // 是否第一次
@@ -270,24 +273,35 @@ Swiper.prototype = {
 
             // 绑定手指触摸事件
             this.swiperDom.addEventListener('touchstart', function(event) {
-                this.startListener(event);
+                // if ( this.oneEnd ) {
+                    this.startListener(event);
+                // }
             }.bind(this));
 
             // 绑定手指滑动事件            
             this.swiperDom.addEventListener('touchmove', function(event) {
-                this.moveListener(event);
+                // if ( this.oneEnd ) {
+                     this.moveListener(event);
+                // }
             }.bind(this));
 
             // 绑定手指结束滑动事件            
             this.swiperDom.addEventListener('touchend', function(event) {
                 this.endListener(event);
             }.bind(this));
+
+            // 绑定TransitionEnd事件 
+            this.swiperDom.addEventListener('webkitTransitionEnd', function(event) {
+                this.transitionEndListener(event);
+            }.bind(this));
         }
     },  
 
     // touchstart事件
-    startListener : function(event) {
+    startListener : function(event) {     
         var target = event.targetTouches[0];
+        // 禁止自动播放（如果设置了定时器时间间隔）
+        clearInterval(this.timer);       
         // 获取当前时间，后面用来判断是否点滑需要用到 
         this.startTime = (new Date()).getTime();
         // 记录当前滑动容器的translate3d值
@@ -303,9 +317,10 @@ Swiper.prototype = {
         this.moveY = target.pageY;
         // 判断是X轴滑动
         if ( this.swipeX  && this.cal(this.startX, this.startY, this.moveX, this.moveY) ) {
+            event.preventDefault();
             this.swipeY = false;
             var x = this.moveX - this.startX;
-            if ( Math.abs(x) >= this.winWidth ) {
+            if ( Math.abs(x) > this.winWidth ) {
                 return;
             }
             x = parseFloat(this.startLeft + x);
@@ -317,22 +332,19 @@ Swiper.prototype = {
 
     // touchend事件
     endListener : function (event) {
-        // 禁止自动播放（如果设置了定时器时间间隔）
-        clearInterval(this.timer); 
         // 重新开启自动播放（如果设置了定时器时间间隔）
         this.setTimer();
+        this.oneEnd = false;
         // 获取当前时间，后面用来判断是否点滑需要用到         
         this.endTime = (new Date()).getTime();
         this.endLeft = this.getTranslate3d();
         // 滑动距离
         var distance = Math.abs(this.endLeft - this.startLeft),
             halfWinWith = this.winWidth/2,
-            left = this.startLeft,
-            time = 300;
-        // 手指接触屏幕时间大于300ms，开启点滑效果
-        if ( this.endTime - this.startTime <= 300 ) {
-            halfWinWith = 10;
-            time = 50;
+            left = this.startLeft;
+        // 手指接触屏幕时间小于200ms，开启点滑效果
+        if ( this.endTime - this.startTime <= 200 ) {
+            halfWinWith = 5;
         }
         
         if ( this.endLeft <= this.startLeft ) {
@@ -350,50 +362,48 @@ Swiper.prototype = {
                 left = this.startLeft + this.winWidth;
             }
         }
-        this.swiperDom.style.webkitTransition = 'transform ' + time + 'ms';
+        this.swiperDom.style.transitionDuration = '300ms';
         this.swiperDom.style.webkitTransform =  'translate3d('+ left +'px,0px,0px)';
-        // 触发动态滑动结束事件
-        this.transitionEndListener();
     },
 
-    // 动态滑动结束事件
-    transitionEndListener : function() {
+    // TransitionEnd事件
+    transitionEndListener : function(e) {
         this.isFirst = false;
-        this.swiperDom.addEventListener("webkitTransitionEnd", function() {
-            this.swiperDom.style.webkitTransition = 'transform 0ms';
-            // 重新计算当前index
-            this.index = -(this.getTranslate3d())/this.winWidth - 1;
-            
-            // 对2种临界状态做一个判断
-            if( this.index===-1 ) {
-                this.index = this.num-1;
-                this.swiperDom.style.webkitTransform =  'translate3d('+ (-this.winWidth * (this.num)) +'px,0px,0px)';
-            }
-            if( this.index>=this.num ) {
-                this.index = 0;
-                this.swiperDom.style.webkitTransform =  'translate3d('+ -this.winWidth +'px,0px,0px)';
-            }
-            this.lazyPlay(this.index+1);
+        transitionFlag = false;
+        this.oneEnd = true;
+        this.swiperDom.style.transitionDuration = '0ms';
+        // 重新计算当前index
+        this.index = Math.floor(-(this.getTranslate3d())/this.winWidth - 1);
+        
+        // 对2种临界状态做一个判断
+        if( this.index===-1 ) {
+            this.index = this.num-1;
+            this.swiperDom.style.webkitTransform =  'translate3d('+ (-this.winWidth * (this.num)) +'px,0px,0px)';
+        }
+        if( this.index>=this.num ) {
+            this.index = 0;
+            this.swiperDom.style.webkitTransform =  'translate3d('+ -this.winWidth +'px,0px,0px)';
+        }
+        this.lazyPlay(this.index+1);
 
-            // 给pagination里面的圆点添加对应样式
-            for(var i=0; i<this.num; i++) {
-                this.paginationList[i].className = 'swiper-pagination-bullet';
-            }
-            this.paginationList[this.index].className = 'swiper-pagination-bullet swiper-pagination-bullet-active';
-
-        }.bind(this), false);
+        // 给pagination里面的圆点添加对应样式
+        for(var i=0; i<this.num; i++) {
+            this.paginationList[i].className = 'swiper-pagination-bullet';
+        }
+        console.log(this.index);
+        this.paginationList[this.index].className = 'swiper-pagination-bullet swiper-pagination-bullet-active';
     },
 
     // 自动轮播
     autoMove : function() {
         this.isFirst ? this.index++ : this.index= this.index + 2;
-        this.swiperDom.style.webkitTransition = 'transform 300ms';
+        this.swiperDom.style.transitionDuration = '300ms';
         this.swiperDom.style.webkitTransform =  'translate3d('+ (-this.index * this.winWidth) +'px,0px,0px)';
-        this.transitionEndListener();
     },
 
     // 自动轮播定时器
     setTimer : function() {
+        clearInterval(this.timer);
          if ( this.options.autoplay >= 1000 ) {
             this.timer = setInterval(function() {
                 this.autoMove();
@@ -403,7 +413,7 @@ Swiper.prototype = {
 
      // 如果开启了懒加载模式
      lazyPlay : function(index) {      
-         if ( this.options.lazyLoading ) {
+         if ( this.options.lazyLoading && this.slidingList[index] ) {
             var slidingDom = this.slidingList[index];
                 imgDom = slidingDom.querySelector('img'),
                 lazyDom = slidingDom.querySelector('.swiper-lazy-preloader');
@@ -452,12 +462,12 @@ var swiper = new Swiper('.swiper-container', {
     autoplay: 3000
 });
 
-var swiper1 = new Swiper('.swiper-container1', {
-    // 是否开启懒加载
-    lazyLoading : false,
-    // 自动轮播时间
-    autoplay: 3000
-});
+// var swiper1 = new Swiper('.swiper-container1', {
+//     // 是否开启懒加载
+//     lazyLoading : false,
+//     // 自动轮播时间
+//     autoplay: 3000
+// });
 </script>
 </body>
 </html>
