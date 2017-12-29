@@ -274,16 +274,16 @@ Swiper.prototype = {
 
             // 绑定手指触摸事件
             this.swiperDom.addEventListener('touchstart', function(event) {
-                // if ( this.oneEnd ) {
+                if ( this.oneEnd ) {
                     this.startListener(event);
-                // }
+                }
             }.bind(this));
 
             // 绑定手指滑动事件            
             this.swiperDom.addEventListener('touchmove', function(event) {
-                // if ( this.oneEnd ) {
+                if ( this.oneEnd ) {
                      this.moveListener(event);
-                // }
+                }
             }.bind(this));
 
             // 绑定手指结束滑动事件            
