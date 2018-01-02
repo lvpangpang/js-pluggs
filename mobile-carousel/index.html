@@ -286,20 +286,20 @@ Swiper.prototype = {
 
             // 绑定手指结束滑动事件            
             this.swiperDom.addEventListener('touchend', function(event) {
-                if ( this.oneEnd ) {
-                    this.endListener(event);
-                }                
+                this.endListener(event);               
             }.bind(this));
 
             // 绑定TransitionEnd事件 
             this.swiperDom.addEventListener('webkitTransitionEnd', function(event) {
+                this.oneEnd = false;
                 this.transitionEndListener(event);
             }.bind(this));
         }
     },  
 
     // touchstart事件
-    startListener : function(event) {     
+    startListener : function(event) { 
+        event.preventDefault();    
         var target = event.targetTouches[0];
         // 禁止自动播放（如果设置了定时器时间间隔）
         clearInterval(this.timer);       
@@ -313,12 +313,12 @@ Swiper.prototype = {
 
     // touchmove事件
     moveListener : function(event) {
+        event.preventDefault();
         var target = event.targetTouches[0];
         this.moveX = target.pageX;
         this.moveY = target.pageY;
         // 判断是X轴滑动
         if ( this.swipeX  && this.cal(this.startX, this.startY, this.moveX, this.moveY) ) {
-            event.preventDefault();
             this.swipeY = false;
             var x = this.moveX - this.startX;
             if ( Math.abs(x) > this.winWidth ) {
@@ -333,9 +333,9 @@ Swiper.prototype = {
 
     // touchend事件
     endListener : function (event) {
+        this.oneEnd = false;
         // 重新开启自动播放（如果设置了定时器时间间隔）
         this.setTimer();
-        this.oneEnd = false;
         // 获取当前时间，后面用来判断是否点滑需要用到         
         this.endTime = (new Date()).getTime();
         this.endLeft = this.getTranslate3d();
@@ -345,7 +345,7 @@ Swiper.prototype = {
             left = this.startLeft;
         // 手指接触屏幕时间小于200ms，开启点滑效果
         if ( this.endTime - this.startTime <= 200 ) {
-            halfWinWith = 5;
+            halfWinWith = 30;
         }
         
         if ( this.endLeft <= this.startLeft ) {
@@ -363,7 +363,7 @@ Swiper.prototype = {
                 left = this.startLeft + this.winWidth;
             }
         }
-        this.swiperDom.style.transitionDuration = '300ms';
+        this.swiperDom.style.transitionDuration = '200ms';
         this.swiperDom.style.webkitTransform =  'translate3d('+ left +'px,0px,0px)';
     },
 
@@ -371,8 +371,6 @@ Swiper.prototype = {
     transitionEndListener : function(e) {
         this.isFirst = false;
         transitionFlag = false;
-        this.oneEnd = true;
-        console.log(this.oneEnd);
         this.swiperDom.style.transitionDuration = '0ms';
         // 重新计算当前index
         this.index = Math.floor(-(this.getTranslate3d())/this.winWidth - 1);
@@ -392,14 +390,17 @@ Swiper.prototype = {
         for(var i=0; i<this.num; i++) {
             this.paginationList[i].className = 'swiper-pagination-bullet';
         }
-        console.log(this.index);
         this.paginationList[this.index].className = 'swiper-pagination-bullet swiper-pagination-bullet-active';
+
+        setTimeout( function() {
+            this.oneEnd = true;
+        }.bind(this), 300);
     },
 
     // 自动轮播
     autoMove : function() {
         this.isFirst ? this.index++ : this.index= this.index + 2;
-        this.swiperDom.style.transitionDuration = '300ms';
+        this.swiperDom.style.transitionDuration = '200ms';
         this.swiperDom.style.webkitTransform =  'translate3d('+ (-this.index * this.winWidth) +'px,0px,0px)';
     },
 
@@ -461,18 +462,15 @@ var swiper = new Swiper('.swiper-container', {
     // 是否开启懒加载
     lazyLoading : true,
     // 自动轮播时间
-    autoplay: 0
+    autoplay: 2000
 });
 
-// var swiper1 = new Swiper('.swiper-container1', {
-//     // 是否开启懒加载
-//     lazyLoading : false,
-//     // 自动轮播时间
-//     autoplay: 3000
-// });
+var swiper1 = new Swiper('.swiper-container1', {
+    // 是否开启懒加载
+    lazyLoading : false,
+    // 自动轮播时间
+    autoplay: 3000
+});
 </script>
 </body>
 </html>
-
-<!--1.快递滑动后，定时轮播变快
-2.划着划着有时候突然划不动-->
